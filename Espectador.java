@@ -2,10 +2,12 @@
  * @author Paula Cruzado Escura
  */
 
+import java.time.*;;
+
 public class Espectador {
     private String nom = "Anonim"; //Initzialitcem a anonim
-    private String dataNaixement = "No"; //Inicialitcem a data naixement desconeguda
-    private float diners; //Diners que te el espectador
+    private LocalDate dataNaixement = LocalDate.of(1900,1,1); //Inicialitcem a data naixement a 1 de Gener de 1900
+    private float diners; //Diners que te el espectador a un abonament per exemple
 
     //CONSTRUCTORS
     /**
@@ -14,7 +16,7 @@ public class Espectador {
      * @param fecha This is the viewer's date of birth
      * @param dinero This is the money that the viewer has
      */
-    public Espectador (String nombre, String fecha, Float dinero) {
+    public Espectador (String nombre, LocalDate fecha, Float dinero) {
         this.nom = nombre;
         this.dataNaixement = fecha;
         this.diners = dinero;
@@ -25,7 +27,7 @@ public class Espectador {
      * @param fecha This is the viewer's date of birth
      * @param dinero This is the money that the viewer has
      */
-    public Espectador (String fecha, float dinero) {
+    public Espectador (LocalDate fecha, float dinero) {
         this.dataNaixement = fecha;
         this.diners = dinero;
     }
@@ -38,6 +40,7 @@ public class Espectador {
         this.diners = dinero;
     }
 
+    
     //SETTERS
     /**
      * setter for nom attribute
@@ -51,7 +54,7 @@ public class Espectador {
      * setter for dataNaixement attribute
      * @param fecha This is the viewer's date of birth
      */
-    public void setDataNaixement (String fecha) {
+    public void setDataNaixement (LocalDate fecha) {
         this.dataNaixement = fecha;
     }
 
@@ -76,7 +79,7 @@ public class Espectador {
      * getter for dataNaixement attribute
      * @param fecha This is the viewer's date of birth
      */
-    public String getDataNaixement () {
+    public LocalDate getDataNaixement () {
         return dataNaixement;
     }
 
@@ -87,4 +90,5 @@ public class Espectador {
     public float getDiners () {
         return diners;
     }
+
 }
