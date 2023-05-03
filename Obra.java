@@ -6,6 +6,18 @@ public class Obra {
     private short durada;
     private String autor;
 
+    //Constructor amb tots els parametres
+    public Obra (String titulo,String autora, short duracion, PEGGI edadmin) {
+        this.titol = titulo;
+        this.autor = autora;
+        this.durada = duracion;
+        this.peggi = edadmin;
+    }
+
+    //Constructor vuit per poder intciar sessio
+    public Obra () {
+
+    }
 
     //SETTERS
     public void setTitol (String titulo) {
