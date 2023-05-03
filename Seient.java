@@ -1,9 +1,9 @@
 
 public class Seient {
     static final byte BFMAX = 10; //max files de butaques, hi han 10 files de butaques
-    static final byte BCMAX = 8; //max  columnes de butaques, hi han 8 columnes de butaques
+    static final byte BCMAX = 20; //max  columnes de butaques, hi han 8 columnes de butaques
     static final byte GFMAX = 3; //max files de galeria, hi han 10 files de butaques
-    static final byte GCMAX = 12; //max columnes de galeria, hi han 8 columnes de butaques
+    static final byte GCMAX = 28; //max columnes de galeria, hi han 8 columnes de butaques
     static final byte PFMAX = 2; //maxim files per a les platees
     static final byte PCMAX = 2; //maxim columnes per a les platees
     static final byte NPLATEES = 6; //Platees -1 existens al teatre
@@ -56,144 +56,96 @@ public class Seient {
     public static void dibuixar_teatre () {
         //dibuixem ocupació butaques 
         int aux =  0;
+        int auxii =0;
         for (int k = 2; k < ubicacions ; k++) {
             k=2+aux;
-            for (int j = 0; j < PFMAX; j++) {
-               
-                for (int i = 0; i < PCMAX ; i++ ) {
-                    if (butacas[k][j][i].getDiners() == -1) {
-                        //System.out.print("X");
-                        System.out.print("("+k+","+j+","+i+")");
-                    } else {
-                        //System.out.print("O");
-                        System.out.print("("+k+","+j+","+i+")");
-                    }          
-                }
-                k = 0;
-                System.out.print("\t");
-                for (int i = 0; i < BCMAX ; i++ ) {
-                    if (butacas[k][j][i].getDiners() == -1) {
-                        //System.out.print("X");
-                     System.out.print("("+k+","+j+","+i+")");
-                    } else {
-                        //System.out.print("O");
-                        System.out.print("("+k+","+j+","+i+")");
-                    }          
-                }
-                k = k+ aux+3;
-                System.out.print("\t");
-                for (int i = 0; i < PCMAX ; i++ ) {
-                    if (butacas[k][j][i].getDiners() == -1) {
-                        //System.out.print("X");
-                        System.out.print("("+k+","+j+","+i+")");
-                    } else {
-                        //System.out.print("O");
-                        System.out.print("("+k+","+j+","+i+")");
-                    }          
-                }
-                k = k -1;
-                System.out.print(k+"\n");
-            }
-            k = k + 1;  
-            aux = aux + 2;      
-        }
-        // for (int j = 0; j < PFMAX; j++) {
-        //     for (int i = 0; i < PCMAX ; i++ ) {
-        //         if (butacas[k][j][i].getDiners() == -1) {
-        //             //System.out.print("X");
-        //             System.out.print("("+k+","+j+","+i+")");
-        //         } else {
-        //             //System.out.print("O");
-        //             System.out.print("("+k+","+j+","+i+")");
-        //         }          
-        //     }
-        //     k = k-2;
-        //     System.out.print("\t");
-        //     for (int i = 0; i < BCMAX ; i++ ) {
-        //         if (butacas[k][j][i].getDiners() == -1) {
-        //             //System.out.print("X");
-        //          System.out.print("("+k+","+j+","+i+")");
-        //         } else {
-        //             //System.out.print("O");
-        //             System.out.print("("+k+","+j+","+i+")");
-        //         }          
-        //     }
-        //     k = k+3;
-        //     System.out.print("\t");
-        //     for (int i = 0; i < PCMAX ; i++ ) {
-        //         if (butacas[k][j][i].getDiners() == -1) {
-        //             //System.out.print("X");
-        //             System.out.print("("+k+","+j+","+i+")");
-        //         } else {
-        //             //System.out.print("O");
-        //             System.out.print("("+k+","+j+","+i+")");
-        //         }          
-        //     }
-        //     k = k -1;
-        //     System.out.print(k+"\n");
-        // }    
-       
-    }
-        
- /*
-        k = 0;
-        for (int j = 0; j < FMAX
-            for (int i = 0; i < BCMAX ; i++ ) {
-                if (butacas[k][j][i].getDiners() == -1) {
-                    System.out.print("X");
-                } else {
-                    System.out.print("O");
-                }
-                
-            }
-            System.out.print("/t");
-        }
-
-        int k = 1;
-        for (int j = 0; j < PFMAX ; j++) {
-            for (int i = 0; i < PCMAX ; i++ ) {
-                if (butacas[k][j][i].getDiners() == -1) {
-                    System.out.print("X");
-                } else {
-                    System.out.print("O");
-                }          
-            }
-            System.out.print("/n");
-        }
-
-        //dibuixem ocupacio galeria
-        System.out.println("");
-        k=1;
-        for (int j = 0; j < GFMAX; j++) {
-            for (int i = 0; i < GCMAX ; i++ ) {
-                if (butacas[k][j][i].getDiners() == -1) {
-                    System.out.print("X");
-                } else {
-                    System.out.print("O");
-                }
-            }
-            System.out.println("");
-
-        }
-        for (k = 2; k < ubicacions; k++) {
-            for (int j = 0; j < PFMAX; j++) {
+            for (int j = 0; j < PFMAX; j++) {              
                 for (int i = 0; i < PCMAX ; i++ ) {
                     if (butacas[k][j][i].getDiners() == -1) {
                         System.out.print("X");
                     } else {
                         System.out.print("O");
-                    }
+                    }          
                 }
+                //Dibuix butaques
+                k = 0;
+                System.out.print("\t");
+                for (int i = 1; i < BCMAX ; i+=2 ) {
+                    if (butacas[k][auxii][i].getDiners() == -1) {
+                        System.out.print("X");
+                    } else {
+                        System.out.print("O");
+                    }          
+                }
+                System.out.print("\t");
+                for (int i = 0; i < BCMAX ; i+=2 ) {
+                    if (butacas[k][auxii][i].getDiners() == -1) {
+                        System.out.print("X");
+                    } else {
+                        System.out.print("O");
+                    }          
+                }
+
+                auxii++;
+                k = k+ aux+3;
+                System.out.print("\t");
+                for (int i = 0; i < PCMAX ; i++ ) {
+                    if (butacas[k][j][i].getDiners() == -1) {
+                        System.out.print("X");
+                    } else {
+                        System.out.print("O");
+                    }          
+                }
+                k = k -1;
+                System.out.print("\n");
             }
-            System.out.println("");
+            k = k + 1;  
+            aux = aux + 2;      
+        }
+
+        //Segona part butaques
+        for (int j = auxii; j < BFMAX; j++) {
+            System.out.print("\t");
+            for (int i = 1; i < BCMAX ; i+=2 ) {
+                if (butacas[0][j][i].getDiners() == -1) {
+                    System.out.print("X");
+                } else {
+                    System.out.print("O");
+                }          
+            }
+            System.out.print("\t");
+            for (int i = 0; i < BCMAX ; i+=2 ) {
+                if (butacas[0][j][i].getDiners() == -1) {
+                    System.out.print("X");
+                } else {
+                    System.out.print("O");
+                }          
+            }
+            System.out.print("\n");
 
         }
-*/
-    
+
+        //Galeria
+        System.out.print("\n");
+        for (int j = 0; j < GFMAX; j++) {
+            System.out.print("       ");
+            for (int i = 0; i < GCMAX ; i++ ) {
+                if (butacas[1][j][i].getDiners() == -1) {
+                    System.out.print("X");
+                } else {
+                    System.out.print("O");
+                }            
+            }
+            System.out.print("\n");
+        }
+
+    }
     
     public static void main (String[] args) {
         inici_teatre();
         butacas[0][0][2].setDiners(30);
+        butacas[1][0][2].setDiners(30);
+        butacas[2][0][0].setDiners(30);
         dibuixar_teatre();
 
     }
