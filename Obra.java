@@ -1,17 +1,22 @@
 public class Obra {
-    private enum PEGGI {TRES,SET,DOTZE,SETZE,DIVUIT}
 
     private String titol;
-    private PEGGI peggi;
+    private byte peggi= 3; //El peggi 3 es per a tots els publics 
     private short durada;
     private String autor;
 
     //Constructor amb tots els parametres
-    public Obra (String titulo,String autora, short duracion, PEGGI edadmin) {
+    public Obra (String titulo,String autora, short duracion, byte edadmin) {
         this.titol = titulo;
         this.autor = autora;
         this.durada = duracion;
         this.peggi = edadmin;
+    }
+
+    public Obra (String titulo,String autora, short duracion) {
+        this.titol = titulo;
+        this.autor = autora;
+        this.durada = duracion;
     }
 
     //Constructor vuit per poder intciar sessio
@@ -19,12 +24,19 @@ public class Obra {
 
     }
 
+   /*  public Obra (Obra repre) {
+        this.titol = repre.titol;
+        this.peggi = repre.peggi;
+        this.durada = repre.durada;
+        this.autor = repre.autor;
+    } */
+
     //SETTERS
     public void setTitol (String titulo) {
         this.titol = titulo;
     }
 
-    public void setPeggi (PEGGI edadMin) {
+    public void setPeggi (byte edadMin) {
         this.peggi = edadMin;
     }
 
@@ -42,7 +54,7 @@ public class Obra {
         return titol;
     }
 
-    public PEGGI getPeggi () {
+    public byte getPeggi () {
         return peggi;
     }
 

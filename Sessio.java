@@ -1,4 +1,5 @@
 import java.time.*;
+import java.time.format.DateTimeFormatter; 
 
 public class Sessio {
 
@@ -63,7 +64,7 @@ public class Sessio {
             butacas[z][y][x] = viewer;
         }
 
-        public void setViwerDelete (byte z, byte y, byte x) {
+        public void setViewerDelete (byte z, byte y, byte x) {
             butacas[z][y][x] = new Espectador(-1);
         }
 
@@ -80,7 +81,7 @@ public class Sessio {
             return butacas[z][y][x].getDiners();
         }
 
-        public String getViwerName (byte z, byte y, byte x) {
+        public String getViewerName (byte z, byte y, byte x) {
             return butacas[z][y][x].getNom();
         }
 
@@ -179,12 +180,10 @@ public class Sessio {
 
     private Obra representacio = new Obra();
     private Seients seient = new Seients();
-    private LocalDate data;
-
-    
-    public Sessio (Obra repre, Seients asiento, LocalDate fecha) {
+    private LocalDateTime data;
+    //Constructor
+    public Sessio (Obra repre,LocalDateTime fecha) {
         this.representacio =repre;
-        this.seient = asiento;
         this.data = fecha;
     }
 
@@ -201,10 +200,11 @@ public class Sessio {
         this.seient = asiento;
     }
 
-    public void setLocalDate (LocalDate fecha) {
+    public void setLocalDate (LocalDateTime fecha) {
         this.data = fecha;
     }
 
+    
     //GETTERS
     public Obra getObra () {
         return representacio;
@@ -214,7 +214,15 @@ public class Sessio {
         return seient;
     }
 
-    public LocalDate getData() {
+    public LocalDateTime getData() {
         return data;
     }
+
+    public String getDataString () {
+        LocalDateTime dataNoFormat = this.data;
+        DateTimeFormatter formatData = DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm");  
+        String data = dataNoFormat.format(formatData);  
+        return data;
+    }
+
 }
