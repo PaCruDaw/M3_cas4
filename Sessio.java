@@ -1,187 +1,195 @@
 import java.time.*;
-import java.time.format.DateTimeFormatter; 
+import java.time.format.DateTimeFormatter;
 
+/**
+ * @autor Paula Cruzado Escura
+ */
 public class Sessio {
-
-    public class Seients {
-        static final byte BFMAX = 10; //max files de butaques, hi han 10 files de butaques
-        static final byte BCMAX = 20; //max  columnes de butaques, hi han 8 columnes de butaques
-        static final byte GFMAX = 3; //max files de galeria, hi han 10 files de butaques
-        static final byte GCMAX = 28; //max columnes de galeria, hi han 8 columnes de butaques
-        static final byte PFMAX = 2; //maxim files per a les platees
-        static final byte PCMAX = 2; //maxim columnes per a les platees
-        static final byte NPLATEES = 6; //Platees -1 existens al teatre
-
-        //static final byte FMAX = BFMAX;
-        //static final byte CMAX = GCMAX;
-
-
-        //la quantitat de ubicacions diferens sera 
-        //  numero de platees + butaques pati + butaques galeria 
-        byte ubicacions = NPLATEES + 2; 
-
-        Espectador[][][] butacas = new Espectador[ubicacions][BFMAX][GCMAX];
-
-        //Constructor
-        public Seients () {
-            iniciar();
-        }
-
-        /**
-         * Method to create a theather localitation
-         * 
-         */
-        public void iniciar () {
-            //inicialitzem butaques
-            int k = 0;
-            for (int j = 0; j < BFMAX; j++) {
-                for (int i = 0; i < BCMAX ; i++ ) {
-                    butacas[k][j][i]= new Espectador(-1);
-                }
-            }
-
-            //initcialitzem galeria
-            k=1;
-            for (int j = 0; j < GFMAX; j++) {
-                for (int i = 0; i < GCMAX ; i++ ) {
-                    butacas[k][j][i]= new Espectador(-1);
-                }
-            }
-
-            //Init platees
-            for (k = 2; k < ubicacions; k++) {
-                for (int j = 0; j < PFMAX; j++) {
-                    for (int i = 0; i < PCMAX ; i++ ) {
-                        butacas[k][j][i]= new Espectador(-1);
-                    }
-                }
-            }
-
-        }
-
-        //SETTERS
-        public void setEspectador (Espectador viewer, int z, int y, int x) {
-            butacas[z][y][x] = viewer;
-        }
-
-        public void setViewerDelete (byte z, byte y, byte x) {
-            butacas[z][y][x] = new Espectador(-1);
-        }
-
-        //GETTERS
-        public Espectador getEspectador (byte z, byte y, byte x) {
-            return butacas[z][y][x];
-        }
-
-        public LocalDate getBorn (byte z, byte y, byte x) {
-            return butacas[z][y][x].getDataNaixement();
-        }
-
-        public float getMoney (byte z, byte y, byte x) {
-            return butacas[z][y][x].getDiners();
-        }
-
-        public String getViewerName (byte z, byte y, byte x) {
-            return butacas[z][y][x].getNom();
-        }
-
-
-
-        public void mapa_ocupacio () {
-            //dibuixem ocupació butaques 
-            int aux =  0;
-            int auxii =0;
-            for (int k = 2; k < ubicacions ; k++) {
-                k=2+aux;
-                for (int j = 0; j < PFMAX; j++) {              
-                    for (int i = 0; i < PCMAX ; i++ ) {
-                        if (butacas[k][j][i].getDiners() == -1) {
-                            System.out.print("X");
-                        } else {
-                            System.out.print("O");
-                        }          
-                    }
-                    //Dibuix butaques
-                    k = 0;
-                    System.out.print("\t");
-                    for (int i = 1; i < BCMAX ; i+=2 ) {
-                        if (butacas[k][auxii][i].getDiners() == -1) {
-                            System.out.print("X");
-                        } else {
-                            System.out.print("O");
-                        }          
-                    }
-                    System.out.print("\t");
-                    for (int i = 0; i < BCMAX ; i+=2 ) {
-                        if (butacas[k][auxii][i].getDiners() == -1) {
-                            System.out.print("X");
-                        } else {
-                            System.out.print("O");
-                        }          
-                    }
-
-                    auxii++;
-                    k = k+ aux+3;
-                    System.out.print("\t");
-                    for (int i = 0; i < PCMAX ; i++ ) {
-                        if (butacas[k][j][i].getDiners() == -1) {
-                            System.out.print("X");
-                        } else {
-                            System.out.print("O");
-                        }          
-                    }
-                    k = k -1;
-                    System.out.print("\n");
-                }
-                k = k + 1;  
-                aux = aux + 2;      
-            }
-
-            //Segona part butaques
-            for (int j = auxii; j < BFMAX; j++) {
-                System.out.print("\t");
-                for (int i = 1; i < BCMAX ; i+=2 ) {
-                    if (butacas[0][j][i].getDiners() == -1) {
-                        System.out.print("X");
-                    } else {
-                        System.out.print("O");
-                    }          
-                }
-                System.out.print("\t");
-                for (int i = 0; i < BCMAX ; i+=2 ) {
-                    if (butacas[0][j][i].getDiners() == -1) {
-                        System.out.print("X");
-                    } else {
-                        System.out.print("O");
-                    }          
-                }
-                System.out.print("\n");
-
-            }
-
-            //Galeria
-            System.out.print("\n");
-            for (int j = 0; j < GFMAX; j++) {
-                System.out.print("       ");
-                for (int i = 0; i < GCMAX ; i++ ) {
-                    if (butacas[1][j][i].getDiners() == -1) {
-                        System.out.print("X");
-                    } else {
-                        System.out.print("O");
-                    }            
-                }
-                System.out.print("\n");
-            }
-
-        }
-        
-    }
-
-
     private Obra representacio = new Obra();
     private Seients seient = new Seients();
     private LocalDateTime data;
-    //Constructor
+
+        public class Seients {
+            static final byte BFMAX = 10; //max files de butaques, hi han 10 files de butaques
+            static final byte BCMAX = 20; //max  columnes de butaques, hi han 8 columnes de butaques
+            static final byte GFMAX = 3; //max files de galeria, hi han 10 files de butaques
+            static final byte GCMAX = 28; //max columnes de galeria, hi han 8 columnes de butaques
+            static final byte PFMAX = 2; //maxim files per a les platees
+            static final byte PCMAX = 2; //maxim columnes per a les platees
+            static final byte NPLATEES = 6; //Platees -1 existens al teatre
+
+            //Per a fer els colors funcione en linux i mac
+            //Per Windows cal instal.ĺar una llibreria Open Source llamada JANSI
+            public static final String ANSI_RED = "\u001B[31m";
+            public static final String ANSI_GREEN = "\u001B[32m";
+            public static final String ANSI_WHITE = "\u001B[37m";
+            public static final String ANSI_RESET = "\u001B[0m"; //valors per defecte
+
+            //static final byte FMAX = BFMAX;
+            //static final byte CMAX = GCMAX;
+
+
+            //la quantitat de ubicacions diferens sera 
+            //  numero de platees + butaques pati + butaques galeria 
+            byte ubicacions = NPLATEES + 2; 
+
+            Espectador[][][] butacas = new Espectador[ubicacions][BFMAX][GCMAX];
+
+            //Constructor
+            public Seients () {
+                iniciar();
+            }
+
+            /**
+             * Method to create a theather localitation
+             * 
+             */
+            public void iniciar () {
+                //inicialitzem butaques
+                int k = 0;
+                for (int j = 0; j < BFMAX; j++) {
+                    for (int i = 0; i < BCMAX ; i++ ) {
+                        butacas[k][j][i]= new Espectador(-1);
+                    }
+                }
+
+                //initcialitzem galeria
+                k=1;
+                for (int j = 0; j < GFMAX; j++) {
+                    for (int i = 0; i < GCMAX ; i++ ) {
+                        butacas[k][j][i]= new Espectador(-1);
+                    }
+                }
+
+                //Init platees
+                for (k = 2; k < ubicacions; k++) {
+                    for (int j = 0; j < PFMAX; j++) {
+                        for (int i = 0; i < PCMAX ; i++ ) {
+                            butacas[k][j][i]= new Espectador(-1);
+                        }
+                    }
+                }
+
+            }
+
+            //SETTERS
+            public void setEspectador (Espectador viewer, int z, int y, int x) {
+                butacas[z][y][x] = viewer;
+            }
+
+            public void deleteEspectador (byte z, byte y, byte x) {
+                butacas[z][y][x] = new Espectador(-1);
+            }
+
+            //GETTERS
+            public Espectador getEspectador (byte z, byte y, byte x) {
+                return butacas[z][y][x];
+            }
+
+            public LocalDate getBorn (byte z, byte y, byte x) {
+                return butacas[z][y][x].getDataNaixement();
+            }
+
+            public float getMoney (byte z, byte y, byte x) {
+                return butacas[z][y][x].getDiners();
+            }
+
+            public String getViewerName (byte z, byte y, byte x) {
+                return butacas[z][y][x].getNom();
+            }
+
+
+            public void mapa_ocupacio () {
+                int aux =  0; //per control d'ubicacions platees o butaques
+                byte auxii =0; //control de files butaques
+                for (int k = 2; k < ubicacions ; k++) {
+                    k=2+aux;
+                    byte p1 = 0; //platees numeracio control
+                    byte p2 = 0; //platees numeracio control
+                    for (int j = 0; j < PFMAX; j++) {    
+                        System.out.print(ANSI_WHITE+"P" + (k) + " "+ANSI_WHITE);
+                        for (int i = 0; i < PCMAX ; i++ ) {
+                            if (butacas[k][j][i].getDiners() == -1) {
+                                System.out.print(ANSI_GREEN+(++p1)+" "+ANSI_GREEN);
+                            } else {
+                                System.out.print(ANSI_RED+(++p1)+" "+ANSI_RED);
+                            }          
+                        }
+                        //Dibuix butaques i platees
+                        k = 0;
+                        System.out.print(ANSI_WHITE+"\tfB" + (auxii+1) + "\t"+ANSI_WHITE);
+                        for (int i = 0; i < BCMAX ; i+=2 ) {
+                            if (butacas[k][auxii][i].getDiners() == -1) {
+                                System.out.print(ANSI_GREEN+(i+1)+" "+ANSI_GREEN);
+                            } else {
+                                System.out.print(ANSI_RED+(i+1)+" "+ANSI_RED);
+                            }          
+                        }
+                        System.out.print("\t");
+                        for (int i = 1; i < BCMAX ; i+=2 ) {
+                            if (butacas[k][auxii][i].getDiners() == -1) {
+                                System.out.print(ANSI_GREEN+(i+1)+" "+ANSI_GREEN);
+                            } else {
+                                System.out.print(ANSI_RED+(i+1)+" "+ANSI_RED);
+                            }          
+                        }
+
+                        auxii++;
+                        k = k+ aux+3;
+                        System.out.print(ANSI_WHITE+"\tP" + (k) + " "+ANSI_WHITE);
+                        for (int i = 0; i < PCMAX ; i++ ) {
+                            if (butacas[k][j][i].getDiners() == -1) {
+                                System.out.print(ANSI_GREEN+(++p2)+" "+ANSI_GREEN);
+                            } else {
+                                System.out.print(ANSI_RED+(++p2)+" "+ANSI_RED);
+                            }          
+                        }
+                        k = k - 1;
+                        System.out.print("\n");
+                    }
+                    k = k + 1;  
+                    aux = aux + 2;      
+                }
+
+                //Segona part butaques k=0 ja que ubicació butaques
+                for (int j = auxii; j < BFMAX; j++) {
+                    System.out.print(ANSI_WHITE+"\tfB" + (j+1) + "\t"+ANSI_WHITE);
+                    for (int i = 0; i < BCMAX ; i+=2 ) {
+                        if (butacas[0][j][i].getDiners() == -1) {
+                            System.out.print(ANSI_GREEN+(i+1)+" "+ANSI_GREEN);
+                        } else {
+                            System.out.print(ANSI_RED+(i+1)+" "+ANSI_RED);
+                        }          
+                    }
+                    System.out.print("\t");
+                    for (int i = 1; i < BCMAX ; i+=2 ) {
+                        if (butacas[0][j][i].getDiners() == -1) {
+                            System.out.print(ANSI_GREEN+(i+1)+" "+ANSI_GREEN);
+                        } else {
+                            System.out.print(ANSI_RED+(i+1)+" "+ANSI_RED);
+                        }          
+                    }
+                    System.out.print("\n");
+                }
+
+                //Galeria
+                System.out.print("\n");
+                for (int j = 0; j < GFMAX; j++) {
+                    System.out.print(ANSI_WHITE+"\t\b\bfG" + (j+1) + " "+ANSI_WHITE);
+                    for (int i = 0; i < GCMAX ; i++ ) {
+                        if (butacas[1][j][i].getDiners() == -1) {
+                            System.out.print(ANSI_GREEN+(i+1)+" "+ANSI_GREEN);
+                        } else {
+                            System.out.print(ANSI_RED+(i+1)+" "+ANSI_RED);
+                        }            
+                    }
+                    System.out.print(ANSI_RESET+"\n"+ANSI_RESET);
+                }   
+            }
+        }
+    ////final classe anidada
+
+    //Constructors classe
     public Sessio (Obra repre,LocalDateTime fecha) {
         this.representacio =repre;
         this.data = fecha;
@@ -225,4 +233,62 @@ public class Sessio {
         return data;
     }
 
+    public void viewerSeats () {
+        System.out.print("Introdueix el nom del expectador:");
+        String nom = System.console().readLine();
+
+        System.out.print("Introdueix el dia de naixement:");
+        byte dia = Comprovacions.cambiarStringByte(System.console().readLine());
+        System.out.print("Introdueix el mes de naixement:");    
+        byte mes = Comprovacions.cambiarStringByte(System.console().readLine());
+        System.out.print("Introdueix l'any de naixement:");
+        byte any = Comprovacions.cambiarStringByte(System.console().readLine());
+        LocalDate fecha = LocalDate.of(any,mes,dia);        
+
+        System.out.print("Introdueix la cantitat de diners disponible:");
+        float diners = Comprovacions.cambiarStringFloat(System.console().readLine());
+
+        Espectador viewer = new Espectador(nom,fecha,diners);
+        
+        System.out.print("Ubicació disponibles\n" +
+                        "\t0 Butaques\n" +
+                        "\t1 Galeria\n" +
+                        "\t2,3,4,5,6 Platees\n"+
+                        "Seleccione una de les ubicacions:");
+        String op = System.console().readLine();
+        switch (op) {
+            case "0":
+                byte z = 0;
+                System.out.print("Indiqui la fila:");
+                byte y = Comprovacions.comprovarFilaButaques(System.console().readLine());
+                System.out.print("Indiqui el nombre del seient:");
+                byte x = Comprovacions.comprovarColButaques(System.console().readLine());
+                seient.setEspectador(viewer,z,y,x);
+
+                break;
+            case "1":
+                z = 1;
+                System.out.print("Indiqui la fila:");
+                y = Comprovacions.comprovarFilaGaleria(System.console().readLine());
+                System.out.print("Indiqui el numero del seient:");
+                x = Comprovacions.comprovarColGaleria(System.console().readLine());
+                seient.setEspectador(viewer,z,y,x);
+                break;
+            case "2":
+                z = 2;
+            
+            case "3": 
+            
+            case "4":
+            
+            case "5":
+            
+            case "6":
+
+        }
+    }     
+
+    public void auditori() {
+        seient.mapa_ocupacio();
+    }
 }

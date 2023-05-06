@@ -4,29 +4,6 @@ public class Teatre {
     //Array dinamic
     static LinkedList<Sessio> sessions = new LinkedList<Sessio>();
     
-    
-    /*public static Espectador crearEspectador() {
-        try {
-            System.out.print("Introduzca el nombre:");
-            String nom = System.console().readLine();
-            System.out.print("Introduzca el dia de nacimiento:");
-            byte dia = Byte.parseByte(System.console().readLine());
-            System.out.print("Introduzca el dia de nacimiento:");
-            byte mes = Byte.parseByte(System.console().readLine());
-            System.out.print("Introduzca el dia de nacimiento:");
-            short any = Short.parseShort(System.console().readLine());
-            LocalDate fecha = LocalDate.of(any,mes,dia);
-            System.out.print("Introduzca la cantidad de dinero que tiene:");
-            float diners = Float.parseFloat(System.console().readLine());
-            Espectador viewer = new Espectador(nom,fecha,diners);
-            return viewer;
-        } catch (Exception e) {
-            System.out.println("S'ha produit un error en la insercio de dades.");
-            e.printStackTrace();
-        }   
-        return viewer;
-
-    } */
     public static void menu() {
         System.out.print("Opcions de menu:\n" +
             "\ta) Llistat de sessions programades\n" +
@@ -82,7 +59,54 @@ public class Teatre {
 
     public static void ventaEntrades () {
         System.out.println("Sessions programades:");
-        llistarSessions();
+        if (sessions.size() > 0) {
+            llistarSessions();
+            System.out.print("Trie la sessió per a la venta:");
+            String op2 = System.console().readLine();
+            try {
+                int i = Integer.parseInt(op2);
+                menuVentaEntrades(i);
+            } catch (Exception e) {
+                System.out.print("La session seleccionada no es valida.");
+            } 
+        } else {
+            System.out.println("Actualment no i ha cap sessió programada.");
+        }  
+    }
+
+    /**
+     * 
+     * @param i Is the number of session
+     */
+    public static void menuVentaEntrades(int i) {
+        String op;
+        String menuTest = "Que vol fer:\n" +
+                            "\ta) Veure les localitats disponibles per a la sessio\n" +
+                            "\tb) Reservar un seient\n" +
+                            "\tc) Cancel.lar reserva\n" +
+                            "\ts) Sortir del menú de venta\n" +
+                            "Trie una opció:";
+        do {
+            System.out.print(menuTest);
+            op = System.console().readLine();
+            switch (op) {
+                case "a":
+                    System.out.println("Ocupació dels seients per a la sessio escollida.");
+                    sessions.get(i).auditori();
+                    break;
+                case "b":
+                    System.out.println("Introdueix les dades del espectador per a reservar el seient");
+                    sessions.get(i).viewerSeats();
+                    break;
+                case "c":
+                    break;
+                case "s":
+                    op="s";
+                    break;
+                default:
+                    System.out.println("Introdueixca una opció valida");
+            }
+        } while (op !="s"); 
     }
 
     public static void guardarDades () {
