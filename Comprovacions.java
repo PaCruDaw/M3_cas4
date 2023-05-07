@@ -79,9 +79,26 @@ public class Comprovacions {
         }
     }
 
-   
+    public static byte acotarMes (byte x) {
+        if ((x <= 12) & (x >= 1)) {
+            return x;
+        } else {
+            return -2;
+        }
+    }
 
-    
+    public static byte acotarDia (byte x) {
+        if ((x <= 31) & (x >= 1)) {
+            return x;
+        } else {
+            return -2;
+        }
+    }
+
+   /*  public static boolean comprovarDataFutura () {
+
+    }
+     */
 
     /* public static void main (String[] args) {
         byte x = comprovarFilaButaques("40");

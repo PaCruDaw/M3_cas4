@@ -242,43 +242,51 @@ public class Sessio {
         System.out.print("Introdueix el nom del expectador:");
         String nom = System.console().readLine();
 
+        LocalDate fecha;
         System.out.print("Introdueix el dia de naixement:");
         byte dia = Comprovacions.cambiarStringByte(System.console().readLine());
-        System.out.print("Introdueix el mes de naixement:");    
-        byte mes = Comprovacions.cambiarStringByte(System.console().readLine());
-        System.out.print("Introdueix l'any de naixement:");
-        byte any = Comprovacions.cambiarStringByte(System.console().readLine());
-        LocalDate fecha = LocalDate.of(any,mes,dia);        
-
-        System.out.print("Introdueix la cantitat de diners disponible:");
-        float diners = Comprovacions.cambiarStringFloat(System.console().readLine());
-
-        Espectador viewer = new Espectador(nom,fecha,diners);
-        
-        System.out.print(ZONES);
-        String op = System.console().readLine();
-        switch (op) {
-            case "0":
-                byte z = 0;
-                System.out.print("Indiqui la fila:");
-                byte y = comprovarFilaButaques(System.console().readLine());
-                System.out.print("Indiqui el nombre del seient:");
-                byte x = comprovarColButaques(System.console().readLine());
-                seient.setEspectador(viewer,z,y,x);
-                break;
-            case "1":
-                z = 1;
-                System.out.print("Indiqui la fila:");
-                y = comprovarFilaGaleria(System.console().readLine());
-                System.out.print("Indiqui el numero del seient:");
-                x = comprovarColGaleria(System.console().readLine());
-                seient.setEspectador(viewer,z,y,x);
-                break;
-            case "2":
-                seientPlatea(viewer);
-                break;
-            default:
-                System.out.println("Opció no disponible.");    
+        dia = Comprovacions.acotarDia(dia);
+        if (dia != -2) {
+            System.out.print("Introdueix el mes de naixement:");    
+            byte mes = Comprovacions.cambiarStringByte(System.console().readLine());
+            mes =Comprovacions.acotarMes(mes);
+            if (mes != -2) {
+                System.out.print("Introdueix l'any de naixement:");
+                byte any = Comprovacions.cambiarStringByte(System.console().readLine());
+                fecha = LocalDate.of(any,mes,dia);        
+                System.out.print("Introdueix la cantitat de diners disponible:");
+                float diners = Comprovacions.cambiarStringFloat(System.console().readLine());
+                Espectador viewer = new Espectador(nom,fecha,diners);
+                System.out.print(ZONES);
+                String op = System.console().readLine();
+                switch (op) {
+                    case "0":
+                        byte z = 0;
+                        System.out.print("Indiqui la fila:");
+                        byte y = comprovarFilaButaques(System.console().readLine());
+                        System.out.print("Indiqui el nombre del seient:");
+                        byte x = comprovarColButaques(System.console().readLine());
+                        seient.setEspectador(viewer,z,y,x);
+                        break;
+                    case "1":
+                        z = 1;
+                        System.out.print("Indiqui la fila:");
+                        y = comprovarFilaGaleria(System.console().readLine());
+                        System.out.print("Indiqui el numero del seient:");
+                        x = comprovarColGaleria(System.console().readLine());
+                        seient.setEspectador(viewer,z,y,x);
+                        break;
+                    case "2":
+                        seientPlatea(viewer);
+                        break;
+                    default:
+                        System.out.println("Opció no disponible.");    
+                }
+            } else {
+                System.out.println("El mes introduit no es valid.");
+            }            
+        } else {
+            System.out.println("El dia intoduit no es valid.");
         }
     }   
     

@@ -29,19 +29,28 @@ public class Teatre {
 
             System.out.print("Introdueix el dia:");
             byte dia = Byte.parseByte(System.console().readLine());
-            System.out.print("Introdueix el mes:");
-            byte mes = Byte.parseByte(System.console().readLine());
-            System.out.print("Introdueix l'any:");
-            short any = Short.parseShort(System.console().readLine());
-            System.out.print("Introdueix l'hora (exemple 18:00):");
-            String hora = System.console().readLine();
-            String[] hour = hora.split(":");
-            byte hSessio = Byte.parseByte(hour[0]);
-            byte minutos = Byte.parseByte(hour[1]);
-            LocalDateTime fecha = LocalDateTime.of(any,mes,dia,hSessio,minutos);
-
-            Sessio sesi = new Sessio(obra,fecha);
-            sessions.add(sesi);
+            dia = Comprovacions.acotarDia(dia);
+            if (dia != -2) {
+                System.out.print("Introdueix el mes:");
+                byte mes = Byte.parseByte(System.console().readLine());
+                mes = Comprovacions.acotarMes(mes);
+                if (mes != -2) {
+                    System.out.print("Introdueix l'any:");
+                    short any = Short.parseShort(System.console().readLine());
+                    System.out.print("Introdueix l'hora (exemple 18:00):");
+                    String hora = System.console().readLine();
+                    String[] hour = hora.split(":");
+                    byte hSessio = Byte.parseByte(hour[0]);
+                    byte minutos = Byte.parseByte(hour[1]);
+                    LocalDateTime fecha = LocalDateTime.of(any,mes,dia,hSessio,minutos);
+                    Sessio sesi = new Sessio(obra,fecha);
+                    sessions.add(sesi);
+                } else {
+                    System.out.println("El mes introduit no es valid.");
+                }
+            } else {
+                System.out.println("El dia introduit no es valid.");
+            }
         } catch (Exception e ) {
             System.out.println("S'ha produit un error en la insercio de dades.");
             e.printStackTrace();
