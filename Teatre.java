@@ -92,13 +92,15 @@ public class Teatre {
             switch (op) {
                 case "a":
                     System.out.println("Ocupació dels seients per a la sessio escollida.");
-                    sessions.get(i).auditori();
+                    sessions.get(i).mapaAuditori();
                     break;
                 case "b":
                     System.out.println("Introdueix les dades del espectador per a reservar el seient");
-                    sessions.get(i).viewerSeats();
+                    sessions.get(i).reservarSeient();
                     break;
                 case "c":
+                    System.out.print("Indique la zona");
+                    sessions.get(i).cancelarReserva();
                     break;
                 case "s":
                     op="s";
@@ -114,6 +116,8 @@ public class Teatre {
     }
 
     public static void main (String[] args) {
+        System.out.print("\033[H\033[2J");  
+        System.out.flush();
         String op;
         do {
             menu();
