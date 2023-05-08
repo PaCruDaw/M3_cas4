@@ -1,3 +1,6 @@
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+
 public class Comprovacions {
     
     /**
@@ -93,6 +96,20 @@ public class Comprovacions {
         } else {
             return -2;
         }
+    }
+
+    public static String dataHourString (LocalDateTime fecha) {
+        LocalDateTime dataNoFormat = fecha;
+        DateTimeFormatter formatData = DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm");  
+        String data = dataNoFormat.format(formatData);  
+        return data;
+    }
+
+    public static String dataString (LocalDate fecha) {
+        LocalDate dataNoFormat = fecha;
+        DateTimeFormatter formatData = DateTimeFormatter.ofPattern("dd-MMM-yyyy");  
+        String data = dataNoFormat.format(formatData);  
+        return data;
     }
 
    /*  public static boolean comprovarDataFutura () {

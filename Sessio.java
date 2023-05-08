@@ -1,5 +1,4 @@
 import java.time.*;
-import java.time.format.DateTimeFormatter;
 
 /**
  * @autor Paula Cruzado Escura
@@ -23,6 +22,7 @@ public class Sessio {
     private Obra representacio = new Obra();
     private Seients seient = new Seients();
     private LocalDateTime data;
+    private float preu;
 
         public class Seients {
             
@@ -78,8 +78,10 @@ public class Sessio {
             }
 
             //SETTERS
-            public void setEspectador (Espectador viewer, int z, int y, int x) {
-                butacas[z][y][x] = viewer;
+            public void setEspectador (Espectador viewer, byte z, byte y, byte x ) {
+                butacas[z][y][x].setNom(viewer.getNom());
+                butacas[z][y][x].setDataNaixement(viewer.getDataNaixement());
+                butacas[z][y][x].setDiners(viewer.getDiners());
             }
 
             public void deleteEspectador (byte z, byte y, byte x) {
@@ -195,9 +197,10 @@ public class Sessio {
     ////final classe anidada
 
     //Constructors classe
-    public Sessio (Obra repre,LocalDateTime fecha) {
+    public Sessio (Obra repre,LocalDateTime fecha, float cost) {
         this.representacio =repre;
         this.data = fecha;
+        this.preu = cost;
     }
 
     public Sessio() {
@@ -217,6 +220,9 @@ public class Sessio {
         this.data = fecha;
     }
 
+    public void setPreu (float cost) {
+        this.preu = cost;
+    }
     
     //GETTERS
     public Obra getObra () {
@@ -231,33 +237,14 @@ public class Sessio {
         return data;
     }
 
-    public String getDataString () {
-        LocalDateTime dataNoFormat = this.data;
-        DateTimeFormatter formatData = DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm");  
-        String data = dataNoFormat.format(formatData);  
-        return data;
+
+    public float getPreu () {
+        return this.preu;
     }
 
-    public void reservarSeient() {
-        System.out.print("Introdueix el nom del expectador:");
-        String nom = System.console().readLine();
 
-        LocalDate fecha;
-        System.out.print("Introdueix el dia de naixement:");
-        byte dia = Comprovacions.cambiarStringByte(System.console().readLine());
-        dia = Comprovacions.acotarDia(dia);
-        if (dia != -2) {
-            System.out.print("Introdueix el mes de naixement:");    
-            byte mes = Comprovacions.cambiarStringByte(System.console().readLine());
-            mes =Comprovacions.acotarMes(mes);
-            if (mes != -2) {
-                System.out.print("Introdueix l'any de naixement:");
-                byte any = Comprovacions.cambiarStringByte(System.console().readLine());
-                fecha = LocalDate.of(any,mes,dia);        
-                System.out.print("Introdueix la cantitat de diners disponible:");
-                float diners = Comprovacions.cambiarStringFloat(System.console().readLine());
-                Espectador viewer = new Espectador(nom,fecha,diners);
-                System.out.print(ZONES);
+    public void reservarSeient( Espectador viewer) {
+        System.out.print(ZONES);
                 String op = System.console().readLine();
                 switch (op) {
                     case "0":
@@ -266,7 +253,7 @@ public class Sessio {
                         byte y = comprovarFilaButaques(System.console().readLine());
                         System.out.print("Indiqui el nombre del seient:");
                         byte x = comprovarColButaques(System.console().readLine());
-                        seient.setEspectador(viewer,z,y,x);
+                        reservaAnterior(viewer, z, y, x); //assignem espectador si no hi ha reserva previa
                         break;
                     case "1":
                         z = 1;
@@ -274,7 +261,7 @@ public class Sessio {
                         y = comprovarFilaGaleria(System.console().readLine());
                         System.out.print("Indiqui el numero del seient:");
                         x = comprovarColGaleria(System.console().readLine());
-                        seient.setEspectador(viewer,z,y,x);
+                        reservaAnterior(viewer, z, y, x); //assignem espectador si no hi ha reserva previa
                         break;
                     case "2":
                         seientPlatea(viewer);
@@ -282,13 +269,8 @@ public class Sessio {
                     default:
                         System.out.println("Opció no disponible.");    
                 }
-            } else {
-                System.out.println("El mes introduit no es valid.");
-            }            
-        } else {
-            System.out.println("El dia intoduit no es valid.");
-        }
     }   
+
     
     public void cancelarReserva( ) {
         System.out.print(ZONES);
@@ -382,7 +364,7 @@ public class Sessio {
         }
     }
 
-    public void seientPlatea (Espectador espec) {
+    public void seientPlatea (Espectador viewer) {
         System.out.print("Indiqui el nombre de la platea:");
         byte p = Comprovacions.cambiarStringByte(System.console().readLine());
         if ((p > 0) & (p <= NPLATEES)) {
@@ -394,22 +376,22 @@ public class Sessio {
                     case 1:
                         byte y = 0;
                         byte x = 0;
-                        seient.setEspectador(espec, p, y, x);
+                        reservaAnterior(viewer, p, y, x); //assignem espectador si no hi ha reserva previa
                         break;
                     case 2:
                         y = 0;
                         x = 1;
-                        seient.setEspectador(espec, p, y, x);
+                        reservaAnterior(viewer, p, y, x); //assignem espectador si no hi ha reserva previa
                         break;               
                     case 3:
                         y = 1;
                         x = 0;
-                        seient.setEspectador(espec, p, y, x);
+                        reservaAnterior(viewer, p, y, x); //assignem espectador si no hi ha reserva previa
                         break;               
                     case 4:
                         y = 1;
                         x = 1;
-                        seient.setEspectador(espec, p, y, x);             
+                        reservaAnterior(viewer, p, y, x); //assignem espectador si no hi ha reserva previa
                 }
             } else {
                 System.out.println("El seient indicat no existeix.");
@@ -457,6 +439,13 @@ public class Sessio {
         }        
     }
 
+    public void reservaAnterior (Espectador viewer, byte z, byte y, byte x) {
+        if (seient.getMoney(z,y,x) == -1) { //si es -1 no hi ha espectador
+            seient.setEspectador(viewer,z,y,x); //assignem espectador
+        } else {
+            System.out.println("El seint ja es reservat.");
+        } 
+    }
 
     public void mapaAuditori() {
         seient.mapa_ocupacio();

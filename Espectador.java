@@ -39,7 +39,6 @@ public class Espectador {
     public Espectador (float dinero) {
         this.diners = dinero;
     }
-
     
     //SETTERS
     /**
@@ -91,4 +90,15 @@ public class Espectador {
         return diners;
     }
 
+    public String toString () {
+        String espectador = nom + " amb data de naixement " + Comprovacions.dataString(dataNaixement) + 
+                            " te actualment " + diners + "€ al seu abonament";
+        return espectador;
+    }
+
+    public void igualar(Espectador viewer) {
+        this.nom = viewer.getNom();
+        this.dataNaixement = viewer.getDataNaixement();
+        this.diners = viewer.getDiners();
+    }
 }
