@@ -1,6 +1,8 @@
 import java.util.LinkedList;
 import java.time.*;
 public class Teatre {
+    static final byte MAX_ANYS_RESER = 3; //Maxim d'anys per crear reserva
+
     //Array dinamic
     static LinkedList<Sessio> sessions = new LinkedList<Sessio>();
     static LinkedList<Espectador> abonats = new LinkedList<Espectador>();
@@ -38,17 +40,30 @@ public class Teatre {
                 mes = Comprovacions.acotarMes(mes);
                 if (mes != -2) {
                     System.out.print("Introdueix l'any:");
-                    short any = Short.parseShort(System.console().readLine());
-                    System.out.print("Introdueix l'hora (exemple 18:00):");
-                    String hora = System.console().readLine();
-                    String[] hour = hora.split(":");
-                    byte hSessio = Byte.parseByte(hour[0]);
-                    byte minutos = Byte.parseByte(hour[1]);
-                    LocalDateTime fecha = LocalDateTime.of(any,mes,dia,hSessio,minutos);
-                    System.out.print("Preu de la entrada base:");
-                    float preu = Comprovacions.cambiarStringFloat(System.console().readLine());
-                    Sessio sesi = new Sessio(obra, fecha, preu);
-                    sessions.add(sesi);
+                    int any = Short.parseShort(System.console().readLine());
+                    LocalDateTime actual = LocalDateTime.now(); //Comprovarem que l'any sigui valid
+                    int year = actual.getYear();
+                    if ((any >= year) && (any <= (year + MAX_ANYS_RESER))) { 
+                        System.out.print("Introdueix l'hora (exemple 18:00):");
+                        String hora = System.console().readLine();
+                        String[] hour = hora.split(":");
+                        byte hSessio = Byte.parseByte(hour[0]);
+                        byte minutos = Byte.parseByte(hour[1]);
+                        //Comprovem que la data introduida es posterior a la actual
+                        LocalDateTime fecha = LocalDateTime.of(any,mes,dia,hSessio,minutos);
+                        LocalDateTime now = LocalDateTime.now();
+                        if (fecha.isAfter(now)) {
+                            System.out.print("Preu de la entrada base:");
+                            float preu = Comprovacions.cambiarStringFloat(System.console().readLine());
+                            Sessio sesi = new Sessio(obra, fecha, preu);
+                            sessions.add(sesi);
+                        } else {
+                            throw new Exception("S'ha produit un error durant la insercio de la data.");
+                        }
+
+                    } else {
+                        throw new Exception("S'ha produit un error durant la insercio del any.");
+                    }                
                 } else {
                     System.out.println("El mes introduit no es valid.");
                 }
@@ -60,6 +75,8 @@ public class Teatre {
             e.printStackTrace();
         }        
     }
+
+    
 
     public static void llistarSessions () {     
             for (int i =0; i < sessions.size(); i++) {
@@ -164,6 +181,7 @@ public class Teatre {
             System.out.println("Actualment no i ha cap sessió programada.");
         }  
     }
+
 
 
 

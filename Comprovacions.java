@@ -98,6 +98,7 @@ public class Comprovacions {
         }
     }
 
+
     public static String dataHourString (LocalDateTime fecha) {
         LocalDateTime dataNoFormat = fecha;
         DateTimeFormatter formatData = DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm");  
@@ -111,6 +112,8 @@ public class Comprovacions {
         String data = dataNoFormat.format(formatData);  
         return data;
     }
+
+
 
    /*  public static boolean comprovarDataFutura () {
 

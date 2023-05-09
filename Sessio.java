@@ -10,7 +10,7 @@ public class Sessio {
     static final byte GCMAX = 28; //max columnes de galeria, hi han 8 columnes de butaques
     static final byte PFMAX = 2; //maxim files per a les platees
     static final byte PCMAX = 2; //maxim columnes per a les platees
-    static final byte NPLATEES = 6; //Platees -1 existens al teatre
+    static final byte NPLATEES = 6; //Platees -1 existens al teatre mantindre maxim 10 i nombre parell
     static final byte NSPLATEES = 4; //nombre de seients disponibles a les platees
 
     static final String ZONES = "Ubicació disponibles\n" +
@@ -78,6 +78,13 @@ public class Sessio {
             }
 
             //SETTERS
+            /**
+             * 
+             * @param viewer //Is the viewer of sesion
+             * @param z  
+             * @param y
+             * @param x
+             */
             public void setEspectador (Espectador viewer, byte z, byte y, byte x ) {
                 butacas[z][y][x].setNom(viewer.getNom());
                 butacas[z][y][x].setDataNaixement(viewer.getDataNaixement());
@@ -105,7 +112,9 @@ public class Sessio {
                 return butacas[z][y][x].getNom();
             }
 
-
+            /**
+             * 
+             */
             public void mapa_ocupacio () {
                 int aux =  0; //per control d'ubicacions platees o butaques
                 byte auxii =0; //control de files butaques
@@ -141,6 +150,7 @@ public class Sessio {
                             }          
                         }
 
+                        //platea
                         auxii++;
                         k = k+ aux+3;
                         System.out.print(ANSI_WHITE+"\tP" + (k-1) + " "+ANSI_WHITE);
