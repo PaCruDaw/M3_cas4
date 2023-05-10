@@ -10,15 +10,9 @@ public class Sessio {
     static final byte GCMAX = 28; //max columnes de galeria, hi han 8 columnes de butaques
     static final byte PFMAX = 2; //maxim files per a les platees
     static final byte PCMAX = 2; //maxim columnes per a les platees
-    static final byte NPLATEES = 6; //Platees -1 existens al teatre mantindre maxim 10 i nombre parell
-    static final byte NSPLATEES = 4; //nombre de seients disponibles a les platees
-
-    static final String ZONES = "Ubicació disponibles\n" +
-                                "\t0 Butaques\n" +
-                                "\t1 Galeria\n" +
-                                "\t2 Platees\n"+
-                                "Seleccione una de les ubicacions:";
-
+    static final byte NPLATEES = 6; //Platees existens al teatre mantindre a la mitad del nombre de files de butaques
+    static final byte NSPLATEES = 4; //nombre de seients disponibles a les platees            
+    
     private Obra representacio = new Obra();
     private Seients seient = new Seients();
     private LocalDateTime data;
@@ -153,19 +147,22 @@ public class Sessio {
                         //platea
                         auxii++;
                         k = k+ aux+3;
-                        System.out.print(ANSI_WHITE+"\tP" + (k-1) + " "+ANSI_WHITE);
-                        for (int i = 0; i < PCMAX ; i++ ) {
-                            if (butacas[k][j][i].getDiners() == -1) {
-                                System.out.print(ANSI_GREEN+(++p2)+" "+ANSI_GREEN);
-                            } else {
-                                System.out.print(ANSI_RED+(++p2)+" "+ANSI_RED);
-                            }          
+                        if (NPLATEES >= (k-1) ) {
+                            System.out.print(ANSI_WHITE+"\tP" + (k-1) + " "+ANSI_WHITE);
+                            for (int i = 0; i < PCMAX ; i++ ) {
+                                if (butacas[k][j][i].getDiners() == -1) {
+                                    System.out.print(ANSI_GREEN+(++p2)+" "+ANSI_GREEN);
+                                } else {
+                                    System.out.print(ANSI_RED+(++p2)+" "+ANSI_RED);
+                                }          
+                            }
+                            
                         }
                         k = k - 1;
                         System.out.print("\n");
-                    }
+                    }  
                     k = k + 1;  
-                    aux = aux + 2;      
+                    aux = aux + 2; 
                 }
 
                 //Segona part butaques k=0 ja que ubicació butaques
@@ -252,38 +249,48 @@ public class Sessio {
         return this.preu;
     }
 
+    public void menuButaques () {
+        System.out.print("Ubicació disponibles\n" +
+                            "\t0 Butaques\n" +
+                            "\t1 Galeria\n" +
+                            "\t2 Platees\n"+
+                            "\t3 Sortir d'aquest menú\n" +
+                            "Seleccione una de les ubicacions:");   
+    }
 
     public void reservarSeient( Espectador viewer) {
-        System.out.print(ZONES);
-                String op = System.console().readLine();
-                switch (op) {
-                    case "0":
-                        byte z = 0;
-                        System.out.print("Indiqui la fila:");
-                        byte y = comprovarFilaButaques(System.console().readLine());
-                        System.out.print("Indiqui el nombre del seient:");
-                        byte x = comprovarColButaques(System.console().readLine());
-                        reservaAnterior(viewer, z, y, x); //assignem espectador si no hi ha reserva previa
-                        break;
-                    case "1":
-                        z = 1;
-                        System.out.print("Indiqui la fila:");
-                        y = comprovarFilaGaleria(System.console().readLine());
-                        System.out.print("Indiqui el numero del seient:");
-                        x = comprovarColGaleria(System.console().readLine());
-                        reservaAnterior(viewer, z, y, x); //assignem espectador si no hi ha reserva previa
-                        break;
-                    case "2":
-                        seientPlatea(viewer);
-                        break;
-                    default:
-                        System.out.println("Opció no disponible.");    
-                }
+        menuButaques();
+        String op = System.console().readLine();
+        switch (op) {
+            case "0":
+                byte z = 0;
+                System.out.print("Indiqui la fila:");
+                byte y = comprovarFilaButaques(System.console().readLine());
+                System.out.print("Indiqui el nombre del seient:");
+                byte x = comprovarColButaques(System.console().readLine());
+                reservaAnterior(viewer, z, y, x); //assignem espectador si no hi ha reserva previa
+                break;
+            case "1":
+                z = 1;
+                System.out.print("Indiqui la fila:");
+                y = comprovarFilaGaleria(System.console().readLine());
+                System.out.print("Indiqui el numero del seient:");
+                x = comprovarColGaleria(System.console().readLine());
+                reservaAnterior(viewer, z, y, x); //assignem espectador si no hi ha reserva previa
+                break;
+            case "2":
+                seientPlatea(viewer);
+                break;
+            case "3":
+                break;
+            default:
+                System.out.println("Opció no disponible.");    
+        }
     }   
 
     
     public void cancelarReserva( ) {
-        System.out.print(ZONES);
+        menuButaques();
         String op = System.console().readLine();
         switch (op) {
             case "0":

@@ -2,11 +2,15 @@ import java.util.LinkedList;
 import java.time.*;
 public class Teatre {
     static final byte MAX_ANYS_RESER = 3; //Maxim d'anys per crear reserva
+    static final int ANY_NAIXEMENT = 1900; //Any minim de naixement
+    static final byte DES_ABONATS = 10; //
+    static final byte DES_GALERIA = 10;
+    static final byte BONI_PLATEA = 20;
 
     //Array dinamic
     static LinkedList<Sessio> sessions = new LinkedList<Sessio>();
     static LinkedList<Espectador> abonats = new LinkedList<Espectador>();
-    
+
     public static void menu() {
         System.out.print("Opcions de menu:\n" +
             "\ta) Llistat de sessions programades\n" +
@@ -27,7 +31,7 @@ public class Teatre {
             String autor = System.console().readLine();
             System.out.print("Introdueix la durada de l'obra:");
             short durada = Short.parseShort(System.console().readLine());
-            System.out.print("Introdueix el peggi de l'obra:");
+            System.out.print("Introdueix la edad mínima per al espectador:");
             byte peggi = Byte.parseByte(System.console().readLine());
             Obra obra = new Obra(nom,autor,durada,peggi);
 
@@ -101,13 +105,16 @@ public class Teatre {
             mes =Comprovacions.acotarMes(mes);
             if (mes != -2) {
                 System.out.print("Introdueix l'any de naixement:");
-                byte any = Comprovacions.cambiarStringByte(System.console().readLine());
-                fecha = LocalDate.of(any,mes,dia);        
-                System.out.print("Introdueix la cantitat de diners disponible:");
-                float diners = Comprovacions.cambiarStringFloat(System.console().readLine());
-                Espectador viewer = new Espectador(nom,fecha,diners);
-                abonats.add(viewer);
-                System.out.println(abonats.get(0));
+                short any = Comprovacions.cambiarStringShort(System.console().readLine());
+                fecha = LocalDate.of(any,mes,dia);   
+                if (fecha.isAfter(LocalDate.of(ANY_NAIXEMENT,1,1))) {
+                    System.out.print("Introdueix la cantitat de diners disponible:");
+                    float diners = Comprovacions.cambiarStringFloat(System.console().readLine());
+                    Espectador viewer = new Espectador(nom,fecha,diners);
+                    abonats.add(viewer);
+                } else {
+                    System.out.println("T'has passat amb l'edat.");
+                }                
             } else {
                 System.out.println("El mes introduit no es valid.");
             }            
@@ -138,17 +145,7 @@ public class Teatre {
                     sessions.get(nsessio).mapaAuditori();
                     break;
                 case "b":
-                    Espectador espectador = new Espectador(-1);
-                    System.out.print("Reservar per abonat (y/n):");
-                    op = System.console().readLine();
-                    if ((op.equals("y")) || (op.equals("Y"))) {
-                        espectador = assignarAbonat();
-                    } else if  ((op.equals("n")) || (op.equals("N"))) {
-                        espectador = new Espectador(sessions.get(nsessio).getPreu());
-                    } else {
-                        System.out.println("Opcio no valida.");
-                    }
-                    sessions.get(nsessio).reservarSeient(espectador);
+                    ferVenta(nsessio);
                     break;
                 case "c":
                     System.out.print("Indique la zona");
@@ -164,7 +161,9 @@ public class Teatre {
     }
 
 
-
+    /**
+     * 
+     */
     public static void ventaEntrades () {
         System.out.println("Sessions programades:");
         if (sessions.size() > 0) {
@@ -189,10 +188,12 @@ public class Teatre {
 
     }
 
-    public static Espectador assignarAbonat ( ) {
+    /**
+     * 
+     * @return 
+     */
+    public static Espectador assignarAbonat (int nAbonat) {
         Espectador espectador = new Espectador(-1);
-        System.out.print("Introdueix el nombre d'abonat:");
-        int nAbonat = Comprovacions.cambiarStringInteger(System.console().readLine());
         if ((nAbonat < abonats.size()) && (nAbonat >= 0)) {
             System.out.println(abonats.get(nAbonat).toString());
             System.out.print("Es correcte (y):");
@@ -208,6 +209,49 @@ public class Teatre {
         }    
     }
 
+
+    public static void ferVenta (int nsessio) {
+        Espectador espectador = new Espectador(-1);
+        System.out.print("Reservar per abonat (y/n):");
+        String op = System.console().readLine();
+        if ((op.equals("y")) || (op.equals("Y"))) { 
+            System.out.print("Introdueix el nombre d'abonat:");
+            int nAbonat = Comprovacions.cambiarStringInteger(System.console().readLine());
+            espectador.igualar(assignarAbonat(nAbonat)); //el espectador es un abonat 
+            float diners = abonats.get(nAbonat).getDiners();
+            float preu = sessions.get(nsessio).getPreu();
+            int edatMinima = sessions.get(nsessio).getObra().getPeggi();
+            LocalDate fn = abonats.get(nAbonat).getDataNaixement();
+            LocalDate fhoy = LocalDate.now();
+            Period period = Period.between(fn, fhoy);
+            int edatEsp = period.getYears();
+            if (edatMinima < edatEsp) {
+                if (diners >= preu) {
+                    sessions.get(nsessio).reservarSeient(espectador); //reservem seient amb reservarSeient a classe sessio   
+                } else {
+                        System.out.println("No te prou diners al abonament per la entrada");
+                } 
+            } else {
+                System.out.println("No te la edat suficient per a accedir.");
+            }     
+        } else if  ((op.equals("n")) || (op.equals("N"))) {
+            if (sessions.get(nsessio).getObra().getPeggi() != 0) {
+                 System.out.println("La edat minima per accedir aquesta obra es: " + sessions.get(nsessio).getObra().getPeggi());
+            }           
+            espectador = new Espectador(sessions.get(nsessio).getPreu()); //creem un espectador amb el contructor de diners = preu de la entrada
+            sessions.get(nsessio).reservarSeient(espectador); //reservem seient amb reservarSeient a classe sessio   
+        } else {
+            System.out.println("Opcio no valida.");
+        }
+    }
+
+   /*  public float llistarPreusAbonats () {
+
+    }
+
+    public float llistarPreus () {
+        
+    } */
 
     public static void main (String[] args) {
         System.out.print("\033[H\033[2J");  //Ens limpie la consola

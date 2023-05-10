@@ -1,7 +1,7 @@
 public class Obra {
 
     private String titol;
-    private byte peggi= 3; //El peggi 3 es per a tots els publics 
+    private byte peggi;
     private short durada;
     private String autor;
 
