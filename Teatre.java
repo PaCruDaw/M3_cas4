@@ -169,10 +169,14 @@ public class Teatre {
         if (sessions.size() > 0) {
             llistarSessions();
             System.out.print("Trie la sessió per a la venta:");
-            String op2 = System.console().readLine();
+            String op2 = System.console().readLine();            
             try {
                 int i = Integer.parseInt(op2);
-                menuVentaEntrades(i);
+                if (sessions.size() > i ) {
+                    menuVentaEntrades(i);
+                } else {
+                    System.out.println("No ho ha cap sessio ham aquest nombre.");
+                }            
             } catch (Exception e) {
                 System.out.print("La session seleccionada no es valida.");
             } 
@@ -215,43 +219,126 @@ public class Teatre {
         System.out.print("Reservar per abonat (y/n):");
         String op = System.console().readLine();
         if ((op.equals("y")) || (op.equals("Y"))) { 
+            float preu = sessions.get(nsessio).getPreu();
+            float preuBase = sessions.get(nsessio).getPreu();
+            float preuButaca = (float)preuBase*((float)1 - (float)DES_ABONATS/(float)100);
+            System.out.println("El preu de les butaques es: " + String.format("%.2f",preuButaca));
+            float preuGaleria = (float)preuBase*((float)1 - ((float)DES_ABONATS/(float)100) - ((float)DES_GALERIA/(float)100));
+            System.out.println("El preu de la galeria es: " + String.format("%.2f",preuGaleria));
+            float preuPlatea = (float)preuBase*((float)1 - ((float)DES_ABONATS/(float)100) + ((float)BONI_PLATEA/(float)100));
+            System.out.println("El preu de les platees  es: " + String.format("%.2f",preuPlatea));
+
             System.out.print("Introdueix el nombre d'abonat:");
             int nAbonat = Comprovacions.cambiarStringInteger(System.console().readLine());
             espectador.igualar(assignarAbonat(nAbonat)); //el espectador es un abonat 
-            float diners = abonats.get(nAbonat).getDiners();
-            float preu = sessions.get(nsessio).getPreu();
-            int edatMinima = sessions.get(nsessio).getObra().getPeggi();
-            LocalDate fn = abonats.get(nAbonat).getDataNaixement();
+            float diners = abonats.get(nAbonat).getDiners(); //guardem els diners que te el abonat
+            int edatMinima = sessions.get(nsessio).getObra().getPeggi(); //el peggi de la obra
+            LocalDate fn = abonats.get(nAbonat).getDataNaixement(); //data de naixement del abonat
             LocalDate fhoy = LocalDate.now();
             Period period = Period.between(fn, fhoy);
             int edatEsp = period.getYears();
-            if (edatMinima < edatEsp) {
-                if (diners >= preu) {
-                    sessions.get(nsessio).reservarSeient(espectador); //reservem seient amb reservarSeient a classe sessio   
-                } else {
-                        System.out.println("No te prou diners al abonament per la entrada");
-                } 
+            if (edatMinima < edatEsp) {  
+                menuButaques();
+                op = System.console().readLine();
+                switch (op) {
+                    case "0":
+                        byte z = 0;
+                        System.out.print("Indiqui la fila:");
+                        byte y = sessions.get(nsessio).comprovarFilaButaques(System.console().readLine());
+                        System.out.print("Indiqui el nombre del seient:");
+                        byte x = sessions.get(nsessio).comprovarColButaques(System.console().readLine());
+                        if (diners >= preuButaca) {
+                            sessions.get(nsessio).reservaSeient(espectador, z, y, x); //reservem seient amb reservarSeient a classe sessio   
+                        } else {
+                            System.out.println("No te prou diners al abonament per la entrada");
+                        } 
+                        //sessions.get(nsessio).reservaSeient(espectador, z, y, x); //assignem espectador si no hi ha reserva previa
+                        break;
+                    case "1":
+                        z = 1;
+                        System.out.print("Indiqui la fila:");
+                        y = sessions.get(nsessio).comprovarFilaGaleria(System.console().readLine());
+                        System.out.print("Indiqui el numero del seient:");
+                        x = sessions.get(nsessio).comprovarColGaleria(System.console().readLine());
+                        if (diners >= preuGaleria) {
+                            sessions.get(nsessio).reservaSeient(espectador, z, y, x); //reservem seient amb reservarSeient a classe sessio   
+                        } else {
+                            System.out.println("No te prou diners al abonament per la entrada");
+                        } 
+                        //sessions.get(nsessio).reservaSeient(espectador, z, y, x); //assignem espectador si no hi ha reserva previa
+                        break;
+                    case "2":
+                        if (diners > preuPlatea) {
+                            sessions.get(nsessio).seientPlatea(espectador);
+                        } else {
+                            System.out.println("No te prou diners al abonament per la entrada");
+                        }
+                        
+                        break;
+                    case "3":
+                        break;
+                    default:
+                        System.out.println("Opció no disponible.");    
+                }
             } else {
                 System.out.println("No te la edat suficient per a accedir.");
             }     
         } else if  ((op.equals("n")) || (op.equals("N"))) {
+            float preuBase = sessions.get(nsessio).getPreu();
+            System.out.println("El preu de les butaques es: " + String.format("%.2f",preuBase));
+            float preuGaleria = ((float)preuBase*((float)1 - ((float)DES_GALERIA/(float)100.0)));
+            System.out.println("El preu de la galeria es: " + String.format("%.2f",preuGaleria));
+            float preuPlatea = (float)(preuBase*((float)1 + (float)(BONI_PLATEA/(float)100)));
+            System.out.println("El preu de les platees  es: " + String.format("%.2f",preuPlatea));
             if (sessions.get(nsessio).getObra().getPeggi() != 0) {
                  System.out.println("La edat minima per accedir aquesta obra es: " + sessions.get(nsessio).getObra().getPeggi());
-            }           
-            espectador = new Espectador(sessions.get(nsessio).getPreu()); //creem un espectador amb el contructor de diners = preu de la entrada
-            sessions.get(nsessio).reservarSeient(espectador); //reservem seient amb reservarSeient a classe sessio   
+            }    
+            menuButaques();
+            op = System.console().readLine();
+            switch (op) {
+                case "0":
+                    byte z = 0;
+                    System.out.print("Indiqui la fila:");
+                    byte y = sessions.get(nsessio).comprovarFilaButaques(System.console().readLine());
+                    System.out.print("Indiqui el nombre del seient:");
+                    byte x = sessions.get(nsessio).comprovarColButaques(System.console().readLine());
+                    x = sessions.get(nsessio).comprovarColGaleria(System.console().readLine());
+                    espectador = new Espectador(preuBase); //creem un espectador amb el contructor de diners = preu de la entrada
+                    sessions.get(nsessio).reservaSeient(espectador, z, y, x); //reservem seient amb reservarSeient a classe sessio   
+                    break;
+                case "1":
+                    z = 1;
+                    System.out.print("Indiqui la fila:");
+                    y = sessions.get(nsessio).comprovarFilaGaleria(System.console().readLine());
+                    System.out.print("Indiqui el numero del seient:");
+                    x = sessions.get(nsessio).comprovarColGaleria(System.console().readLine());
+                    espectador = new Espectador(preuGaleria); //creem un espectador amb el contructor de diners = preu de la entrada
+                    sessions.get(nsessio).reservaSeient(espectador, z, y, x); //reservem seient amb reservarSeient a classe sessio   
+                    break;
+                case "2":
+                        espectador = new Espectador(preuPlatea); //creem un espectador amb el contructor de diners = preu de la entrada
+                        sessions.get(nsessio).seientPlatea(espectador);                      
+                    break;
+                case "3":
+                    break;
+                default:
+                    System.out.println("Opció no disponible.");    
+            }
         } else {
             System.out.println("Opcio no valida.");
         }
     }
 
-   /*  public float llistarPreusAbonats () {
 
+    public static void menuButaques () {
+        System.out.print("Ubicació disponibles\n" +
+                            "\t0 Butaques\n" +
+                            "\t1 Galeria\n" +
+                            "\t2 Platees\n"+
+                            "\t3 Sortir d'aquest menú\n" +
+                            "Seleccione una de les ubicacions:");   
     }
 
-    public float llistarPreus () {
-        
-    } */
 
     public static void main (String[] args) {
         System.out.print("\033[H\033[2J");  //Ens limpie la consola

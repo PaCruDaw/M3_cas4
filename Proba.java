@@ -1,7 +1,9 @@
+import java.util.*;
 public class Proba {      
-    Sessio sesi = new Sessio();
 
     public static void main (String[] args) {
-        sesi.auditori();
+        float p = (float) 0.299;
+        float r = (float) Math.round(p);
+        System.out.println("h"+ p + " "+ String.format("%.2f",p)); 
     }
 }

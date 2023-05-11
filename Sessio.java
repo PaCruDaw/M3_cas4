@@ -249,48 +249,9 @@ public class Sessio {
         return this.preu;
     }
 
-    public void menuButaques () {
-        System.out.print("Ubicació disponibles\n" +
-                            "\t0 Butaques\n" +
-                            "\t1 Galeria\n" +
-                            "\t2 Platees\n"+
-                            "\t3 Sortir d'aquest menú\n" +
-                            "Seleccione una de les ubicacions:");   
-    }
-
-    public void reservarSeient( Espectador viewer) {
-        menuButaques();
-        String op = System.console().readLine();
-        switch (op) {
-            case "0":
-                byte z = 0;
-                System.out.print("Indiqui la fila:");
-                byte y = comprovarFilaButaques(System.console().readLine());
-                System.out.print("Indiqui el nombre del seient:");
-                byte x = comprovarColButaques(System.console().readLine());
-                reservaAnterior(viewer, z, y, x); //assignem espectador si no hi ha reserva previa
-                break;
-            case "1":
-                z = 1;
-                System.out.print("Indiqui la fila:");
-                y = comprovarFilaGaleria(System.console().readLine());
-                System.out.print("Indiqui el numero del seient:");
-                x = comprovarColGaleria(System.console().readLine());
-                reservaAnterior(viewer, z, y, x); //assignem espectador si no hi ha reserva previa
-                break;
-            case "2":
-                seientPlatea(viewer);
-                break;
-            case "3":
-                break;
-            default:
-                System.out.println("Opció no disponible.");    
-        }
-    }   
-
     
     public void cancelarReserva( ) {
-        menuButaques();
+        Teatre.menuButaques();
         String op = System.console().readLine();
         switch (op) {
             case "0":
@@ -393,22 +354,22 @@ public class Sessio {
                     case 1:
                         byte y = 0;
                         byte x = 0;
-                        reservaAnterior(viewer, p, y, x); //assignem espectador si no hi ha reserva previa
+                        reservaSeient(viewer, p, y, x); //assignem espectador si no hi ha reserva previa
                         break;
                     case 2:
                         y = 0;
                         x = 1;
-                        reservaAnterior(viewer, p, y, x); //assignem espectador si no hi ha reserva previa
+                        reservaSeient(viewer, p, y, x); //assignem espectador si no hi ha reserva previa
                         break;               
                     case 3:
                         y = 1;
                         x = 0;
-                        reservaAnterior(viewer, p, y, x); //assignem espectador si no hi ha reserva previa
+                        reservaSeient(viewer, p, y, x); //assignem espectador si no hi ha reserva previa
                         break;               
                     case 4:
                         y = 1;
                         x = 1;
-                        reservaAnterior(viewer, p, y, x); //assignem espectador si no hi ha reserva previa
+                        reservaSeient(viewer, p, y, x); //assignem espectador si no hi ha reserva previa
                 }
             } else {
                 System.out.println("El seient indicat no existeix.");
@@ -456,8 +417,8 @@ public class Sessio {
         }        
     }
 
-    public void reservaAnterior (Espectador viewer, byte z, byte y, byte x) {
-        if (seient.getMoney(z,y,x) == -1) { //si es -1 no hi ha espectador
+    public void reservaSeient (Espectador viewer, byte z, byte y, byte x) {
+        if (seient.getMoney(z,y,x) == -1) { //si es -1 no hi ha espectador ja esta assignat
             seient.setEspectador(viewer,z,y,x); //assignem espectador
         } else {
             System.out.println("El seint ja es reservat.");
