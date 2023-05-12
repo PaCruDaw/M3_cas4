@@ -27,8 +27,8 @@ public class Espectador {
      * @param fecha This is the viewer's date of birth
      * @param dinero This is the money that the viewer has
      */
-    public Espectador (LocalDate fecha, float dinero) {
-        this.dataNaixement = fecha;
+    public Espectador (String nombre, float dinero) {
+        this.nom = nombre;
         this.diners = dinero;
     }
     
