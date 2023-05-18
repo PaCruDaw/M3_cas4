@@ -18,23 +18,6 @@ public class Comprovacions {
         }
     }
 
-    public static boolean betweenByte(byte data, byte limitInferior, byte limitSuperior) {
-        if ((data < limitInferior) || (data > limitSuperior) ) {
-            System.out.println("El nombre introduit no es dins del rang especificat");
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public static boolean betweenShort(short data, short limitInferior, short limitSuperior) {
-        if ((data < limitInferior) || (data > limitSuperior) ) {
-            System.out.println("El nombre introduit no es dins del rang especificat");
-            return false;
-        } else {
-            return true;
-        }
-    }
 
     /**
      * 
@@ -51,6 +34,11 @@ public class Comprovacions {
         }
     }
 
+    /**
+     * Method to check if a string is a number, if it is it returns the number, otherwise a -2
+     * @param x String for comprovate
+     * @return the number
+     */
     public static byte cambiarStringByte (String x) {
         try {
             byte num = Byte.parseByte(x);
@@ -61,6 +49,11 @@ public class Comprovacions {
         }
     }
 
+    /**
+     * Method to check if a string is a number, if it is it returns the number, otherwise a -2
+     * @param x String for comprovate
+     * @return the number
+     */
     public static short cambiarStringShort (String x) {
         try {
             short num = Short.parseShort(x);
@@ -71,6 +64,11 @@ public class Comprovacions {
         }
     }
     
+    /**
+     * Method to check if a string is a number, if it is it returns the number, otherwise a -2
+     * @param x String for comprovate
+     * @return the number
+     */
     public static float cambiarStringFloat (String x) {
         try {
             float num = Float.parseFloat(x);
@@ -82,6 +80,11 @@ public class Comprovacions {
         }
     }
 
+    /**
+     * Method to check if a string is a number, if it is it returns the number, otherwise a -2
+     * @param x String for comprovate
+     * @return the number
+     */
     public static byte acotarMes (byte x) {
         if ((x <= 12) & (x >= 1)) {
             return x;
@@ -90,6 +93,11 @@ public class Comprovacions {
         }
     }
 
+    /**
+     * Method to check that a number can be a day of the month
+     * @param x number to check
+     * @return the number
+     */
     public static byte acotarDia (byte x) {
         if ((x <= 31) & (x >= 1)) {
             return x;
@@ -99,6 +107,11 @@ public class Comprovacions {
     }
 
 
+    /**
+     * Method to change format data
+     * @param fecha date to transform to another format
+     * @return date
+     */
     public static String dataHourString (LocalDateTime fecha) {
         LocalDateTime dataNoFormat = fecha;
         DateTimeFormatter formatData = DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm");  
@@ -106,22 +119,15 @@ public class Comprovacions {
         return data;
     }
 
+    /**
+     * Method to change format data
+     * @param fecha date to transform to another format
+     * @return date
+     */
     public static String dataString (LocalDate fecha) {
         LocalDate dataNoFormat = fecha;
         DateTimeFormatter formatData = DateTimeFormatter.ofPattern("dd-MMM-yyyy");  
         String data = dataNoFormat.format(formatData);  
         return data;
     }
-
-
-
-   /*  public static boolean comprovarDataFutura () {
-
-    }
-     */
-
-    /* public static void main (String[] args) {
-        byte x = comprovarFilaButaques("40");
-        System.out.println(x);
-    } */
 }

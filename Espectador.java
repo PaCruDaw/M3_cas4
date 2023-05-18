@@ -24,7 +24,7 @@ public class Espectador {
 
     /**
      * Constructor of the viewer class with two parameters
-     * @param fecha This is the viewer's date of birth
+     * @param nombre This is the viewer's name
      * @param dinero This is the money that the viewer has
      */
     public Espectador (String nombre, float dinero) {
@@ -68,7 +68,7 @@ public class Espectador {
     //GETTERS
     /**
      * getter for nom attribute
-     * @param nombre This is the viewer's name
+     * @return nombre This is the viewer's name
      */
     public String getNom() {
         return nom;
@@ -76,26 +76,33 @@ public class Espectador {
 
     /**
      * getter for dataNaixement attribute
-     * @param fecha This is the viewer's date of birth
+     * @return fecha This is the viewer's date of birth
      */
-    public LocalDate getDataNaixement () {
+     public LocalDate getDataNaixement () {
         return dataNaixement;
     }
 
     /**
      * getter for dinero attribute
-     * @param dinero This is the money that the viewer has
+     *  @return dinero This is the money that the viewer has
      */
     public float getDiners () {
         return diners;
     }
 
+    /**
+     * Method to print viewer data
+     */
     public String toString () {
         String espectador = nom + " amb data de naixement " + Comprovacions.dataString(dataNaixement) + 
                             " te actualment " + diners + "€ al seu abonament";
         return espectador;
     }
 
+    /**
+     * Method for clone Espectador Object 
+     * @param viewer Object Espectador
+     */
     public void igualar(Espectador viewer) {
         this.nom = viewer.getNom();
         this.dataNaixement = viewer.getDataNaixement();

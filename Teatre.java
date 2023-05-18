@@ -8,23 +8,36 @@ public class Teatre {
     static final byte BONI_PLATEA = 20;
 
     //Array dinamic
+    /**
+     * Scheduled sessions 
+     */
     static LinkedList<Sessio> sessions = new LinkedList<Sessio>();
+
+    /**
+     * Subscribers 
+     */
     static LinkedList<Espectador> abonats = new LinkedList<Espectador>();
 
+    /**
+     * Main menu.
+     */
     public static void menu() {
         System.out.print("Opcions de menu:\n" +
             "\ta) Llistat de sessions programades\n" +
             "\tb) Programar nova sessio\n" +
             "\tc) Introduir abonat\n" +
             "\td) Venta d'entrades\n" +
-            "\te) Guardar dades\n" +
+            "\te) Llistar abonats\n" +
             "\tf) Calcular recaptació\n" +
             "\ts) Sortir del programa\n"+
             "Introdueix una opció de menú:");
     }
 
-    public static void crearSession () {
-        
+    /**
+     * Method that allows us to create a new session. 
+     * Session not create only to date after now and only with three years before
+     */
+    public static void crearSession () {       
         try {
             System.out.print("Introdueix el nom de l'obra:");
             String nom = System.console().readLine();
@@ -48,7 +61,7 @@ public class Teatre {
                     int any = Short.parseShort(System.console().readLine());
                     LocalDateTime actual = LocalDateTime.now(); //Comprovarem que l'any sigui valid
                     int year = actual.getYear();
-                    if ((any >= year) && (any <= (year + MAX_ANYS_RESER))) { 
+                    if ((any >= year) && (any <= (year + MAX_ANYS_RESER))) { //les sessions no poden ser programades amb mes de tres anys d'antelació
                         System.out.print("Introdueix l'hora (exemple 18:00):");
                         String hora = System.console().readLine();
                         String[] hour = hora.split(":");
@@ -63,7 +76,7 @@ public class Teatre {
                             Sessio sesi = new Sessio(obra, fecha, preu);
                             sessions.add(sesi);
                         } else {
-                            throw new Exception("S'ha produit un error durant la insercio de la data.");
+                            throw new Exception("La data introduida es anterior a l'actual.");
                         }
 
                     } else {
@@ -81,8 +94,9 @@ public class Teatre {
         }        
     }
 
-    
-
+    /**
+     * Method for listing available sessions. 
+     */
     public static void llistarSessions () {     
             for (int i =0; i < sessions.size(); i++) {
                 System.out.print("\tCodi Sessio: "+ i + " Obra i horari: ");
@@ -92,6 +106,9 @@ public class Teatre {
             }
     }
 
+    /**
+     * Method for creating a subscriber. 
+     */
     public static void crearAbonat () {
         System.out.print("Introdueix el nom del abonat:");
         String nom = System.console().readLine();
@@ -108,7 +125,8 @@ public class Teatre {
                 System.out.print("Introdueix l'any de naixement:");
                 short any = Comprovacions.cambiarStringShort(System.console().readLine());
                 fecha = LocalDate.of(any,mes,dia);   
-                if (fecha.isAfter(LocalDate.of(ANY_NAIXEMENT,1,1))) {
+                LocalDate now = LocalDate.now();
+                if (fecha.isAfter(LocalDate.of(ANY_NAIXEMENT,1,1)) && (fecha.isBefore(now))) {
                     System.out.print("Introdueix la cantitat de diners disponible:");
                     float diners = Comprovacions.cambiarStringFloat(System.console().readLine());
                     Espectador viewer = new Espectador(nom,fecha,diners);
@@ -124,45 +142,8 @@ public class Teatre {
         }
     }
 
-    
     /**
-     * 
-     * @param i Is the number of session
-     */
-    public static void menuVentaEntrades(int nsessio) {
-        String op;
-        String MVENTA = "Que vol fer:\n" +
-                        "\ta) Veure les localitats disponibles per a la sessio\n" +
-                        "\tb) Reservar un seient\n" +
-                        "\tc) Cancel.lar reserva\n" +
-                        "\ts) Sortir del menú de venta\n" +
-                        "Trie una opció:";
-        do {
-            System.out.print(MVENTA);
-            op = System.console().readLine();
-            switch (op) {
-                case "a":
-                    System.out.println("Ocupació dels seients per a la sessio escollida.");
-                    sessions.get(nsessio).mapaAuditori();
-                    break;
-                case "b":
-                    ferVenta(nsessio);
-                    break;
-                case "c":
-                    cancelarReserva(nsessio);
-                    break;
-                case "s":
-                    op="s";
-                    break;
-                default:
-                    System.out.println("Introdueixca una opció valida");
-            }
-        } while (op !="s"); 
-    }
-
-
-    /**
-     * 
+     * Method to choose the sales session, as well as the correct insertion of data by the user. 
      */
     public static void ventaEntrades () {
         System.out.println("Sessions programades:");
@@ -185,16 +166,48 @@ public class Teatre {
         }  
     }
 
-
-
-
-    public static void guardarDades () {
-
+    /**
+     * It generates the menu for the sale of tickets of the last session as a parameter.
+     * @param nsessio Is the number of session
+     */
+    public static void menuVentaEntrades(int nsessio) {
+        String op;
+        do {
+            System.out.print("Que vol fer:\n" +
+                            "\ta) Veure les localitats disponibles per a la sessio\n" +
+                            "\tb) Reservar un seient\n" +
+                            "\tc) Cancel.lar reserva\n" +
+                            "\td) Coneixer qui te la reserva\n" +
+                            "\ts) Sortir del menú de venta\n" +
+                            "Trie una opció:");
+            op = System.console().readLine();
+            switch (op) {
+                case "a":
+                    System.out.println("Ocupació dels seients per a la sessio escollida.");
+                    sessions.get(nsessio).mapaAuditori();
+                    break;
+                case "b":
+                    ferVenta(nsessio);
+                    break;
+                case "c":
+                    cancelarReserva(nsessio);
+                    break;
+                case "d":
+                    saberNomEspectador(nsessio);
+                    break;
+                case "s":
+                    op="s";
+                    break;
+                default:
+                    System.out.println("Introdueixca una opció valida");
+            }
+        } while (op !="s"); 
     }
 
     /**
-     * 
-     * @return 
+     * A method that returns a viewer object, copying values from a subscriber. 
+     * @param nAbonat  Subscriber Number 
+     * @return  Spectator object 
      */
     public static Espectador assignarAbonat (int nAbonat) {
         Espectador espectador = new Espectador(-1);
@@ -216,6 +229,9 @@ public class Teatre {
         }    
     }
 
+    /**
+     * Menu to select theater locations.  
+     */
     public static void menuButaques () {
         System.out.print("Ubicacions disponibles\n" +
                             "\t0 Butaques\n" +
@@ -225,6 +241,10 @@ public class Teatre {
                             "Seleccione una de les ubicacions:");   
     }
 
+    /**
+     * Method for selling an entry from a session, given by the input parameter nsessio. It allows us to sell to both subscribers and non-subscribers, also the location of the seat, and the price applying discounts. 
+     * @param nsessio Session number for cancellation of the reservation 
+     */
     public static void ferVenta (int nsessio) {
         Espectador espectador = new Espectador(-1);
         System.out.print("Reservar per abonat (y/n):");
@@ -286,7 +306,6 @@ public class Teatre {
                                 } else {
                                     System.out.println("No te prou diners al abonament per la entrada");
                                 } 
-                                //sessions.get(nsessio).reservaSeient(espectador, z, y, x); //assignem espectador si no hi ha reserva previa
                                 break;
                             case "2":
                                 if (diners > preuPlatea) {
@@ -347,8 +366,6 @@ public class Teatre {
                         espectador = new Espectador(preuPlatea); //creem un espectador amb el contructor de diners = preu de la entrada
                         sessions.get(nsessio).seientPlatea(espectador);                      
                     break;
-                case "3":
-                    break;
                 default:
                     System.out.println("Opció no disponible.");    
             }
@@ -357,7 +374,10 @@ public class Teatre {
         }
     }
 
-
+    /**
+     * Method to cancel the reservation of a seat in a session determined by the input parameter. Distinguishes between returning a subscriber and a non-subscriber. 
+     * @param nsessio  Session number for cancellation of the reservation 
+     */
     public static void cancelarReserva (int nsessio) {
         System.out.print("Cancelar reserva per abonat (y/n):");
         String op = System.console().readLine();
@@ -370,12 +390,12 @@ public class Teatre {
             if  ((re.equals("y")) || (re.equals("Y"))) {
                 float devolucio = sessions.get(nsessio).cancelarSeient();
                 float dinersAbonat = abonats.get(nAbonat).getDiners();
-                if (devolucio != -1) {
+                if (devolucio > 0 ) {
                     float diners = devolucio + dinersAbonat;
                     abonats.get(nAbonat).setDiners(diners);
-                    System.out.println("La cantitat a retornada al seu abonament es: " + devolucio);
+                    System.out.println("La cantitat retornada al seu abonament es: " + devolucio);
                 } else {
-                    System.out.println("El seient ja es vuit.");
+                    System.out.println("El seient es vuit.");
                 }                
             } else if ((re.equals("n")) || (re.equals("N"))) {
                 System.out.println("S'ha cancelat la anul.lació.");
@@ -384,13 +404,18 @@ public class Teatre {
             }           
         } else if ((op.equals("n")) || (op.equals("N"))) {
             float devolucio = sessions.get(nsessio).cancelarSeient();
-            System.out.println("La cantitat a retornar es: " + devolucio);
+            if (devolucio>0) {
+                System.out.println("La cantitat a retornar es: " + devolucio);
+            } 
+            
         } else {
             System.out.println("La opció no es valida.");
         }
     }
 
-    
+    /**
+     * Method for calculating the total collected in the selected session. 
+     */
     public static void calcularRecaptacio () {
         System.out.println("Sessions programades:");
         if (sessions.size() > 0) {
@@ -400,7 +425,7 @@ public class Teatre {
             try {
                 int i = Integer.parseInt(op2);
                 if (sessions.size() > i ) {
-                    sessions.get(i).calcularRecaptacio();
+                    sessions.get(i).recaptatSessio();
                 } else {
                     System.out.println("No hi ha cap sessio ham aquest nombre.");
                 }            
@@ -410,7 +435,101 @@ public class Teatre {
         }
     }
 
+    /**
+     * Method to know the name of the spectator who occupies a seat.
+     * @param nsessio number of session
+     */
+    public static void saberNomEspectador (int nsessio) {
+        System.out.println("Indiqui la locatitat per veure a qui esta assignada.");
+        menuButaques();
+        String op = System.console().readLine();
+        if (op.equals("0")) {
+            System.out.print("Insireix el nombre de fila: ");
+                byte fila = sessions.get(nsessio).comprovarFilaButaques(System.console().readLine()); //comprovar fila butaca
+                if (fila!=-2) {
+                    System.out.print("Insireix el nombre del seient: ");
+                    String num = System.console().readLine();
+                    byte x = sessions.get(nsessio).comprovarColButaques(num); //Comprobar columna butaca
+                    imprimirNom(nsessio, (byte)0, fila, x);
+                } 
+        } else if (op.equals("1")) {        
+                System.out.print("Insireix el nombre de fila: ");
+                byte fila =sessions.get(nsessio).comprovarFilaGaleria(System.console().readLine());
+                if (fila!=-2) {
+                    System.out.print("Insireix el nombre del seient: ");
+                    String num = System.console().readLine();
+                    byte x = sessions.get(nsessio).comprovarColGaleria(num);
+                    imprimirNom(nsessio, (byte)1, fila, x);
+                }
+                
+        } else if (op.equals("2")) {       
+                System.out.print("Insireix el nombre de Platea: ");
+                String numpla = System.console().readLine();
+                byte np =sessions.get(nsessio).comprovarNumeroPlatea(numpla);
+                if (np>0) {
+                    np++;
+                    System.out.print("Insireix el nombre del seient: ");
+                    String numse = System.console().readLine();
+                    byte ns = sessions.get(nsessio).comprovarNumeroSeientPlatea(numse);
+                    switch (ns) {
+                        case 1:
+                            byte y = 0;
+                            byte x = 0;
+                            imprimirNom(nsessio, np, y, x);
+                            break;
+                        case 2:
+                            y = 0;
+                            x = 1;
+                            imprimirNom(nsessio, np, y, x);
+                            break;               
+                        case 3:
+                            y = 1;
+                            x = 0;
+                            imprimirNom(nsessio, np, y, x);
+                            break;               
+                        case 4:
+                            y = 1;
+                            x = 1;
+                            imprimirNom(nsessio, ns, y, x);
+                            break;
+                        default:
+                            System.out.println("Opció no valida.");     
+                    }
+                } 
+        } else {
+            System.out.println("La opció no es valida.");
+        }       
+    }
 
+    /**
+     * Method for print name of viewer.
+     * @param nsessio number session.
+     * @param z Location.
+     * @param y Row or number of platea.
+     * @param x Number of seat.
+     */
+    public static void imprimirNom (int nsessio, byte z, byte y, byte x) {
+        if (sessions.get(nsessio).sessionPagatPelSeient(z, y, x) == -1) {
+            System.out.println("El seient es vuit.");
+
+        } else {           
+            System.out.println("El seient esta ocupat per " + sessions.get(nsessio).sessionNameViewer(z,y,x));
+        }  
+    }
+    
+
+    /**
+     * Method for print to screem the name of suscriptors.
+     */
+    public static void llistarAbonats() {
+        for (int i=0; i < sessions.size()+1; i++) {
+            System.out.println(abonats.get(i).toString());
+        }
+    }
+    /**
+     * Main program
+     * @param args
+     */
     public static void main (String[] args) {
         System.out.print("\033[H\033[2J");  //Ens limpie la consola
         System.out.flush();
@@ -432,7 +551,7 @@ public class Teatre {
                     ventaEntrades();
                     break;
                 case "e":
-                    guardarDades();
+                    llistarAbonats();
                     break;
                 case "f":
                     calcularRecaptacio();
