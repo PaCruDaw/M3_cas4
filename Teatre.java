@@ -209,7 +209,7 @@ public class Teatre {
      * @param nAbonat  Subscriber Number 
      * @return  Spectator object 
      */
-    public static Espectador assignarAbonat (int nAbonat) {
+    /* public static Espectador assignarAbonat (int nAbonat) {
         Espectador espectador = new Espectador(-1);
         if ((nAbonat < abonats.size()) && (nAbonat >= 0)) {
             System.out.println(abonats.get(nAbonat).toString());
@@ -227,12 +227,14 @@ public class Teatre {
         } else {
             return espectador = new Espectador(-10);
         }    
-    }
+    } */
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //SUSTITUIT A VOLUNTAT PROPIA
     /**
      * Menu to select theater locations.  
      */
-    public static void menuButaques () {
+    /*public static void menuButaques () {
         System.out.print("Ubicacions disponibles\n" +
                             "\t0 Butaques\n" +
                             "\t1 Galeria\n" +
@@ -241,10 +243,14 @@ public class Teatre {
                             "Seleccione una de les ubicacions:");   
     }
 
-    /**
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Metode antic sustituit per instruccions de Maria
+
+    /* /**
      * Method for selling an entry from a session, given by the input parameter nsessio. It allows us to sell to both subscribers and non-subscribers, also the location of the seat, and the price applying discounts. 
      * @param nsessio Session number for cancellation of the reservation 
-     */
+     *//*
     public static void ferVenta (int nsessio) {
         Espectador espectador = new Espectador(-1);
         System.out.print("Reservar per abonat (y/n):");
@@ -373,6 +379,10 @@ public class Teatre {
             System.out.println("Opcio no valida.");
         }
     }
+ */
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     /**
      * Method to cancel the reservation of a seat in a session determined by the input parameter. Distinguishes between returning a subscriber and a non-subscriber. 
@@ -441,9 +451,8 @@ public class Teatre {
      */
     public static void saberNomEspectador (int nsessio) {
         System.out.println("Indiqui la locatitat per veure a qui esta assignada.");
-        menuButaques();
-        String op = System.console().readLine();
-        if (op.equals("0")) {
+        byte op = sessions.get(nsessio).menuButaques();
+        if (op==0) {
             System.out.print("Insireix el nombre de fila: ");
                 byte fila = sessions.get(nsessio).comprovarFilaButaques(System.console().readLine()); //comprovar fila butaca
                 if (fila!=-2) {
@@ -452,7 +461,7 @@ public class Teatre {
                     byte x = sessions.get(nsessio).comprovarColButaques(num); //Comprobar columna butaca
                     imprimirNom(nsessio, (byte)0, fila, x);
                 } 
-        } else if (op.equals("1")) {        
+        } else if (op==1) {        
                 System.out.print("Insireix el nombre de fila: ");
                 byte fila =sessions.get(nsessio).comprovarFilaGaleria(System.console().readLine());
                 if (fila!=-2) {
@@ -462,12 +471,7 @@ public class Teatre {
                     imprimirNom(nsessio, (byte)1, fila, x);
                 }
                 
-        } else if (op.equals("2")) {       
-                System.out.print("Insireix el nombre de Platea: ");
-                String numpla = System.console().readLine();
-                byte np =sessions.get(nsessio).comprovarNumeroPlatea(numpla);
-                if (np>0) {
-                    np++;
+        } else if (op >= 2) {       
                     System.out.print("Insireix el nombre del seient: ");
                     String numse = System.console().readLine();
                     byte ns = sessions.get(nsessio).comprovarNumeroSeientPlatea(numse);
@@ -475,30 +479,28 @@ public class Teatre {
                         case 1:
                             byte y = 0;
                             byte x = 0;
-                            imprimirNom(nsessio, np, y, x);
+                            imprimirNom(nsessio, op, y, x);
                             break;
                         case 2:
                             y = 0;
                             x = 1;
-                            imprimirNom(nsessio, np, y, x);
+                            imprimirNom(nsessio, op, y, x);
                             break;               
                         case 3:
                             y = 1;
                             x = 0;
-                            imprimirNom(nsessio, np, y, x);
+                            imprimirNom(nsessio, op, y, x);
                             break;               
                         case 4:
                             y = 1;
                             x = 1;
-                            imprimirNom(nsessio, ns, y, x);
+                            imprimirNom(nsessio, op, y, x);
                             break;
                         default:
                             System.out.println("Opció no valida.");     
                     }
-                } 
-        } else {
-            System.out.println("La opció no es valida.");
-        }       
+        } 
+           
     }
 
     /**
@@ -522,10 +524,99 @@ public class Teatre {
      * Method for print to screem the name of suscriptors.
      */
     public static void llistarAbonats() {
-        for (int i=0; i < sessions.size()+1; i++) {
+        for (int i = 0; i < abonats.size(); i++) {
             System.out.println(abonats.get(i).toString());
         }
     }
+////////////////////////////////////////////////////////////////7
+// Metode ferVenta solicitat per Maria
+
+     /**
+     * Method for selling an entry from a session, given by the input parameter nsessio. It allows us to sell to both subscribers and non-subscribers, also the location of the seat, and the price applying discounts. 
+     * @param nsessio Session number for cancellation of the reservation 
+     */
+    public static void ferVenta (int nsessio) {
+        byte y=-1; //donem un valor inicial, per evitar errada compilador  
+        byte x=-1;
+        float preu = sessions.get(nsessio).getPreu();
+        byte z = sessions.get(nsessio).menuButaques();
+        if (z==0){
+            System.out.print("Indiqui la fila:");
+            y = sessions.get(nsessio).comprovarFilaButaques(System.console().readLine());
+            System.out.print("Indiqui el nombre del seient:");
+            x = sessions.get(nsessio).comprovarColButaques(System.console().readLine());
+        } else if (z==1) {
+            System.out.print("Indiqui la fila:");
+            y = sessions.get(nsessio).comprovarFilaGaleria(System.console().readLine());
+            System.out.print("Indiqui el nombre del seient:");
+            x = sessions.get(nsessio).comprovarColGaleria(System.console().readLine());
+        } 
+        System.out.print("Reservar per abonat (y/n):");
+        String op = System.console().readLine();
+        if ((op.equals("y")) || (op.equals("Y"))) { 
+            //informacio sobre el preu
+            System.out.print("Introdueix el nombre d'abonat:");
+            int nAbonat = Comprovacions.cambiarStringInteger(System.console().readLine());
+            if ((nAbonat < abonats.size()) && (nAbonat >= 0)) {
+                System.out.println(abonats.get(nAbonat).toString());
+                System.out.print("Es correcte (y):");
+                String re = System.console().readLine();
+                if ((re.equals("y")) || (re.equals("Y"))) {
+                    if (abonats.get(nAbonat).majorEdat(sessions.get(nsessio).getObra().getPeggi())) {   
+                        if (z==0) {
+                            preu = preu*(1 - ((float)DES_ABONATS/100));
+                        } else if (z==1) {
+                            preu = preu*(1 - ((float)DES_ABONATS/100) - ((float)DES_GALERIA/100));
+                        } else if (z >= 2) {
+                            preu = preu*(1 - ((float)DES_ABONATS/100) + ((float)BONI_PLATEA/100));
+                        }         
+                        System.out.println("El preu de la entrada es: " + preu);                   
+                        if (abonats.get(nAbonat).pagarEntrada(preu)) {
+                            if ((z == 0) || (z == 1)) {
+                                sessions.get(nsessio).reservaSeient(abonats.get(nAbonat), z, y, x); 
+                            } else {
+                                sessions.get(nsessio).seientPlatea(abonats.get(nAbonat), z);
+                            }
+                            System.out.println("S'ha realitzat la reserva.");
+                        } else {
+                            System.out.println("No s'ha pogut realitzar el pagament.");
+                        }
+                    } else { //No te prou edat per passar
+                        System.out.println("No te edat suficient per entrar en aquesta sessió.");
+                    } 
+                }
+            } else {
+                System.out.println("El nombre d'abonat no existeix.");
+            }
+        } else if ((op.equals("n")) || (op.equals("N"))) { //no es abonat
+            if (z==1) {
+                preu = preu*(1 - ((float)DES_GALERIA/100));
+            } else if (z >= 2) {
+                preu = preu*(1 + ((float)BONI_PLATEA/100));
+            }          
+            System.out.println("la edat minima per entrar es " + sessions.get(nsessio).getObra().getPeggi());
+            if (z==1) {
+                preu = preu*(1 - ((float)DES_GALERIA/100));
+            } else if (z >= 2) {
+                preu = preu*(1 + ((float)BONI_PLATEA/100));
+            }
+            System.out.println("El preu de la entrada es: " + preu);                   
+            Espectador espectador = new Espectador (preu);
+            if ((z == 0) || (z == 1)) {
+                sessions.get(nsessio).reservaSeient(espectador, z, y, x); 
+            } else {
+                sessions.get(nsessio).seientPlatea(espectador, z);
+            }
+            System.out.println("S'ha realitzat la reserva.");
+        } else {
+            System.out.println("La opció escollida no existeix.");
+        }        
+    }
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+// Programa principal igual que estaba abans
+
     /**
      * Main program
      * @param args

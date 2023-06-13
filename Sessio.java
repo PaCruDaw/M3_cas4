@@ -242,8 +242,10 @@ public class Sessio {
                     System.out.print(ANSI_RESET+"\n"+ANSI_RESET);
                 }   
             }
-        }
-    ////final classe anidada
+
+        }      ////final classe anidada 
+
+    
 
     //Constructors classe
     /**
@@ -341,59 +343,56 @@ public class Sessio {
      * @return  Amount of money for return or error.
      */
     public float cancelarSeient() {
-        Teatre.menuButaques();
-        String op = System.console().readLine();
-        switch (op) {
-            case "0":
-                byte z = 0;
-                System.out.print("Indiqui la fila:");
-                byte y = comprovarFilaButaques(System.console().readLine());
-                System.out.print("Indiqui el nombre del seient:");
-                byte x = comprovarColButaques(System.console().readLine());
-                System.out.print("Esteu segurs de cancelar (y): ");
-                op = System.console().readLine();
-                if  ((op.equals("y")) || (op.equals("Y"))) {
-                    float diners = seient.getMoney(z,y,x);
-                    if (diners == -1) {
-                        System.out.println("El seient no te reserva revise les dades introduides.");
-                        return -2;
-                    } else {
-                        seient.deleteEspectador(z, y, x);
-                        System.out.println("La cantitat a retornar es: " + diners);
-                        return diners;
-                    }                      
-                }  else {
-                    System.out.println("Operació cancelada.");
+        byte z = menuButaques();
+        if (z == 0) {
+            System.out.print("Indiqui la fila:");
+            byte y = comprovarFilaButaques(System.console().readLine());
+            System.out.print("Indiqui el nombre del seient:");
+            byte x = comprovarColButaques(System.console().readLine());
+            System.out.print("Esteu segurs de cancelar (y): ");
+            String op1 = System.console().readLine();
+            if  ((op1.equals("y")) || (op1.equals("Y"))) {
+                float diners = seient.getMoney(z,y,x);
+                if (diners == -1) {
+                    System.out.println("El seient no te reserva revise les dades introduides.");
                     return -2;
-                }             
-            case "1":
-                z = 1;
-                System.out.print("Indiqui la fila:");
-                y = comprovarFilaGaleria(System.console().readLine()); //y es la fila
-                System.out.print("Indiqui el numero del seient:");
-                x = comprovarColGaleria(System.console().readLine()); //x el nom del seient
-                System.out.print("Esteu segurs cancelar (y): ");
-                op = System.console().readLine();
-                if  ((op.equals("y")) || (op.equals("Y"))) {
-                    float diners = seient.getMoney(z,y,x);
-                    if (diners == -1) {
-                        System.out.println("El seient no te reserva revise les dades introduides.");
-                        return -1;
-                    } else {
-                        seient.deleteEspectador(z, y, x);
-                        return diners;
-                    }                      
-                }  else {
-                    System.out.println("Operació cancelada.");
-                    return -2;
-                }             
-            case "2":
-                float diners = cancelarSeientPlatea();
-                return diners;
-            default:
-                System.out.println("Ubicació no valida.");   
-                return -2; 
-        }
+                } else {
+                    seient.deleteEspectador(z, y, x);
+                    System.out.println("La cantitat a retornar es: " + diners);
+                    return diners;
+                }    
+            }  else {
+                System.out.println("Operació cancelada.");
+                return -2;
+            }  
+        } else if (z==1) {
+            System.out.print("Indiqui la fila:");
+            byte y = comprovarFilaGaleria(System.console().readLine()); //y es la fila
+            System.out.print("Indiqui el numero del seient:");
+            byte x = comprovarColGaleria(System.console().readLine()); //x el nom del seient
+            System.out.print("Esteu segurs cancelar (y): ");
+            String op1 = System.console().readLine();
+            if  ((op1.equals("y")) || (op1.equals("Y"))) {
+                float diners = seient.getMoney(z,y,x);
+                if (diners == -1) {
+                    System.out.println("El seient no te reserva revise les dades introduides.");
+                    return -1;
+                } else {
+                    seient.deleteEspectador(z, y, x);
+                    return diners;
+                }                      
+            }  else {
+                System.out.println("Operació cancelada.");
+                return -2;
+            }
+        } else  if (z >= 2){           
+            float diners = cancelarSeientPlatea();
+            return diners;
+        } else {
+            System.out.println("S'ha produit un error al cancelar la reserva.");
+            return -2;
+        } 
+
     }
 
     /**
@@ -499,41 +498,34 @@ public class Sessio {
     /**
      *  Method to reserve a seat in the stalls 
      */
-    public void seientPlatea (Espectador viewer) {
-        System.out.print("Indiqui el nombre de la platea:");
-        byte p = Comprovacions.cambiarStringByte(System.console().readLine());
-        if ((p > 0) & (p <= NPLATEES)) {
-            p++;
-            System.out.print("Indiqui el nombre del seient:");
-            byte num = Comprovacions.cambiarStringByte(System.console().readLine());
-            if ((num >= 1) && (num <= NSPLATEES)) {
-                switch (num) {
-                    case 1:
-                        byte y = 0;
-                        byte x = 0;
-                        reservaSeient(viewer, p, y, x); //assignem espectador si no hi ha reserva previa
-                        break;
-                    case 2:
-                        y = 0;
-                        x = 1;
-                        reservaSeient(viewer, p, y, x); //assignem espectador si no hi ha reserva previa
-                        break;               
-                    case 3:
-                        y = 1;
-                        x = 0;
-                        reservaSeient(viewer, p, y, x); //assignem espectador si no hi ha reserva previa
-                        break;               
-                    case 4:
-                        y = 1;
-                        x = 1;
-                        reservaSeient(viewer, p, y, x); //assignem espectador si no hi ha reserva previa
-                }
-            } else {
-                System.out.println("El seient indicat no existeix.");
+    public void seientPlatea (Espectador viewer, byte p) {
+        System.out.print("Introdueix el nombre del seient: ");
+        String ns = System.console().readLine();
+            switch (ns) {
+                case "1":
+                    byte y = 0;
+                    byte x = 0;
+                    reservaSeient(viewer, p, y, x); //assignem espectador si no hi ha reserva previa
+                    break;
+                case "2":
+                    y = 0;
+                    x = 1;
+                    reservaSeient(viewer, p, y, x); //assignem espectador si no hi ha reserva previa
+                    break;               
+                case "3":
+                     y = 1;
+                     x = 0;
+                    reservaSeient(viewer, p, y, x); //assignem espectador si no hi ha reserva previa
+                    break;               
+                case "4":
+                    y = 1;
+                    x = 1;
+                    reservaSeient(viewer, p, y, x); //assignem espectador si no hi ha reserva previa
+                    break;
+                default:
+                    System.out.println("No hi ha cap seient amb aquest nombre.");
             }
-        } else {
-            System.out.println("La platea no existeix.");
-        }        
+      
     }
 
     /**
@@ -677,5 +669,33 @@ public class Sessio {
         }
         System.out.println("El total recaptat en aquesta sessio es: " + total);
     }
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//Nous
+
+    public byte menuButaques () {
+        System.out.print("Ubicacions disponibles\n" +
+                "\t0 Butaques\n" +
+                "\t1 Galeria\n");
+                for (int i = 2; i < (NPLATEES + 2); i++) {
+                    System.out.print("\t"+ i + " Platea " + (i-1) + "\n");
+                }
+            System.out.print(
+                "\t" + (NPLATEES + 2 ) + " Sortir d'aquest menú\n" +
+                "Seleccione una de les ubicacions: "); 
+        String op = System.console().readLine();
+        byte ubi = Comprovacions.cambiarStringByte(op);
+        if (ubi != -2) {
+            if ((ubi >= 0) && (ubi < NPLATEES + 3)) {
+                return ubi;
+            } else {
+                return -1;
+            }       
+        } else {
+            System.out.println("S'ha produit un error al introduir la ubicació");
+            return -1;
+        }
+        
+    }
+
 }
 

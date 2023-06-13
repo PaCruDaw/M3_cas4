@@ -108,4 +108,85 @@ public class Espectador {
         this.dataNaixement = viewer.getDataNaixement();
         this.diners = viewer.getDiners();
     }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Metodes nous convenients per al meu criteri
+
+    //en el enunciat original l'atribut es la edad un int, jo  tinc el atribut data
+    /**
+     * This method calcul age of espectador
+     * @return age of espectador
+     */
+    public int calculEdat ( ) {
+        LocalDate fn = this.dataNaixement; //data de naixement del abonat
+        LocalDate fhoy = LocalDate.now();
+        Period period = Period.between(fn, fhoy); //calcul del periode transcurrit
+        int edatEsp = period.getYears(); //periode en anys
+        return edatEsp;
+    } 
+
+
+
+    /**
+     * Method to update the money that the spectator has, if the number is positive it is added to the amount, 
+     * if it is negative it is subtracted
+     * @param act_diners money to add or subtracted
+     */
+    public void actualitzarDiners ( float act_diners) {
+        this.diners = this.diners + act_diners;
+    }
+
+    ///metodes nous solicitats Maria
+
+
+    /**
+     * This method compares the age of the viewer, 
+     * with the age passed by parameter, if it is greater or equal,
+     * it returns true, if it is less, false.
+     * @param edat Age pased by parameter
+     * @return false is ages less, true if is greater or equal. 
+     */
+    public boolean majorEdat(int edat) {
+        int edatEsp = calculEdat();
+        if (edatEsp >= edat) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * This method compares money of the viewer, with price passed by parameter, if it is greater or equal,
+     * it returns true, if it is less, false.
+     * @param preu price of admision
+     * @return true if money is greater or equal, false if is less
+     */
+    public boolean teDiners ( float preu) {
+        if (this.diners >= preu ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Method to update the money that the spectator has, if the number is positive it is added to the amount, 
+     * if it is negative it is subtracted
+     * @param preu money to add or subtracted
+     * @return if operation ok return 0 if not return false
+     */
+    public boolean pagarEntrada ( float preu) {
+        if (teDiners(preu)) {
+            actualitzarDiners(-preu);
+            return true;
+        } else { //No te diners suficients
+            System.out.println("No te diners suficients per accedir");
+            return false;
+        }   
+    }
+
+
+
 }
